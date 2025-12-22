@@ -8,53 +8,84 @@ import { PrayerTimesList } from '@/components/PrayerTimesList';
 import { Mosque } from '@/types';
 import { mockMosques } from '@/data/mockData';
 import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default marker icons in Leaflet with Vite
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom mosque icon
+const mosqueIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/5765/5765985.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const selectedMosqueIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/5765/5765985.png',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40],
+});
+
+// Component to handle map center changes
+const MapController: React.FC<{ center: [number, number] }> = ({ center }) => {
+  const map = useMap();
+  React.useEffect(() => {
+    map.setView(center, map.getZoom());
+  }, [center, map]);
+  return null;
+};
 
 export const MapView: React.FC = () => {
   const [selectedMosque, setSelectedMosque] = useState<Mosque | null>(null);
-
+  
+  // Mumbai center coordinates
+  const defaultCenter: [number, number] = [19.076, 72.8777];
+  
   return (
     <div className="relative w-full h-full min-h-[calc(100vh-8rem)]">
-      {/* Map Placeholder */}
-      <div className="absolute inset-0 bg-muted/20 islamic-pattern">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background/90" />
-        
-        {/* Map markers */}
-        <div className="relative w-full h-full">
-          {mockMosques.map((mosque, index) => (
-            <button
+      {/* Leaflet Map */}
+      <div className="absolute inset-0">
+        <MapContainer
+          center={defaultCenter}
+          zoom={14}
+          style={{ height: '100%', width: '100%' }}
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <MapController center={selectedMosque ? [selectedMosque.lat, selectedMosque.lng] : defaultCenter} />
+          
+          {mockMosques.map((mosque) => (
+            <Marker
               key={mosque.id}
-              onClick={() => setSelectedMosque(mosque)}
-              className={cn(
-                "absolute transform -translate-x-1/2 -translate-y-1/2",
-                "w-10 h-10 rounded-full flex items-center justify-center",
-                "transition-all duration-200 hover:scale-110",
-                selectedMosque?.id === mosque.id
-                  ? "bg-primary shadow-lg shadow-primary/30 scale-110"
-                  : "bg-card border border-border shadow-md"
-              )}
-              style={{
-                left: `${20 + index * 18}%`,
-                top: `${25 + (index % 3) * 20}%`,
+              position={[mosque.lat, mosque.lng]}
+              icon={selectedMosque?.id === mosque.id ? selectedMosqueIcon : mosqueIcon}
+              eventHandlers={{
+                click: () => setSelectedMosque(mosque),
               }}
             >
-              <Building2 
-                size={18} 
-                className={selectedMosque?.id === mosque.id ? "text-primary-foreground" : "text-foreground"} 
-              />
-            </button>
+              <Popup>
+                <div className="text-sm font-medium">{mosque.name}</div>
+                <div className="text-xs text-gray-500">{mosque.distance} km away</div>
+              </Popup>
+            </Marker>
           ))}
-        </div>
-
-        {/* Center indicator */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="w-4 h-4 rounded-full bg-secondary border-2 border-foreground shadow-lg" />
-          <div className="w-16 h-16 rounded-full border-2 border-secondary/50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
-        </div>
+        </MapContainer>
       </div>
 
       {/* Location info overlay */}
-      <div className="absolute top-4 left-4 right-4">
+      <div className="absolute top-4 left-4 right-4 z-[1000]">
         <Card variant="glass" className="animate-scale-in">
           <CardContent className="p-3">
             <div className="flex items-center gap-2">
@@ -113,22 +144,22 @@ export const MapView: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
               <a 
                 href={`https://www.google.com/maps/dir/?api=1&destination=${selectedMosque.lat},${selectedMosque.lng}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1"
               >
-                <Button variant="teal" className="w-full" size="lg">
-                  <Navigation size={18} />
+                <Button variant="teal" className="w-full" size="default">
+                  <Navigation size={16} />
                   Navigate
                 </Button>
               </a>
               <Link to={`/mosque/${selectedMosque.id}`} className="flex-1">
-                <Button variant="gold" className="w-full" size="lg">
+                <Button variant="gold" className="w-full" size="default">
                   View Details
-                  <ChevronRight size={18} />
+                  <ChevronRight size={16} />
                 </Button>
               </Link>
             </div>
