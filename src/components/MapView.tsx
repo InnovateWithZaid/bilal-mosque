@@ -8,84 +8,59 @@ import { PrayerTimesList } from '@/components/PrayerTimesList';
 import { Mosque } from '@/types';
 import { mockMosques } from '@/data/mockData';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
-// Fix for default marker icons in Leaflet with Vite
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-// Custom mosque icon
-const mosqueIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/5765/5765985.png',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
-
-const selectedMosqueIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/5765/5765985.png',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -40],
-});
-
-// Component to handle map center changes
-const MapController: React.FC<{ center: [number, number] }> = ({ center }) => {
-  const map = useMap();
-  React.useEffect(() => {
-    map.setView(center, map.getZoom());
-  }, [center, map]);
-  return null;
-};
+import { cn } from '@/lib/utils';
 
 export const MapView: React.FC = () => {
   const [selectedMosque, setSelectedMosque] = useState<Mosque | null>(null);
   
   // Mumbai center coordinates
-  const defaultCenter: [number, number] = [19.076, 72.8777];
-  
+  const centerLat = 19.076;
+  const centerLng = 72.8777;
+
   return (
     <div className="relative w-full h-full min-h-[calc(100vh-8rem)]">
-      {/* Leaflet Map */}
+      {/* OpenStreetMap Embed */}
       <div className="absolute inset-0">
-        <MapContainer
-          center={defaultCenter}
-          zoom={14}
-          style={{ height: '100%', width: '100%' }}
-          zoomControl={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <MapController center={selectedMosque ? [selectedMosque.lat, selectedMosque.lng] : defaultCenter} />
-          
-          {mockMosques.map((mosque) => (
-            <Marker
+        <iframe
+          title="Map"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          scrolling="no"
+          src={`https://www.openstreetmap.org/export/embed.html?bbox=${centerLng - 0.03}%2C${centerLat - 0.02}%2C${centerLng + 0.03}%2C${centerLat + 0.02}&layer=mapnik&marker=${centerLat}%2C${centerLng}`}
+          style={{ border: 0 }}
+        />
+        
+        {/* Overlay for mosque markers */}
+        <div className="absolute inset-0 pointer-events-none">
+          {mockMosques.map((mosque, index) => (
+            <button
               key={mosque.id}
-              position={[mosque.lat, mosque.lng]}
-              icon={selectedMosque?.id === mosque.id ? selectedMosqueIcon : mosqueIcon}
-              eventHandlers={{
-                click: () => setSelectedMosque(mosque),
+              onClick={() => setSelectedMosque(mosque)}
+              className={cn(
+                "absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-auto",
+                "w-10 h-10 rounded-full flex items-center justify-center",
+                "transition-all duration-200 hover:scale-110 z-10",
+                selectedMosque?.id === mosque.id
+                  ? "bg-primary shadow-lg shadow-primary/30 scale-110"
+                  : "bg-card border border-border shadow-md"
+              )}
+              style={{
+                left: `${20 + index * 18}%`,
+                top: `${30 + (index % 3) * 18}%`,
               }}
             >
-              <Popup>
-                <div className="text-sm font-medium">{mosque.name}</div>
-                <div className="text-xs text-gray-500">{mosque.distance} km away</div>
-              </Popup>
-            </Marker>
+              <Building2 
+                size={18} 
+                className={selectedMosque?.id === mosque.id ? "text-primary-foreground" : "text-foreground"} 
+              />
+            </button>
           ))}
-        </MapContainer>
+        </div>
       </div>
 
       {/* Location info overlay */}
-      <div className="absolute top-4 left-4 right-4 z-[1000]">
+      <div className="absolute top-4 left-4 right-4 z-20">
         <Card variant="glass" className="animate-scale-in">
           <CardContent className="p-3">
             <div className="flex items-center gap-2">
