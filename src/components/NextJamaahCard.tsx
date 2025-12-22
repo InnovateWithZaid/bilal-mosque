@@ -75,17 +75,17 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="px-5 pb-5 flex gap-3">
+        <div className="px-5 pb-5 flex flex-col sm:flex-row gap-2 sm:gap-3">
           <Link to="/map" className="flex-1">
-            <Button variant="outline" className="w-full" size="lg">
-              <Navigation size={18} />
-              View on Map
+            <Button variant="outline" className="w-full text-sm" size="default">
+              <Navigation size={16} className="shrink-0" />
+              <span className="truncate">View on Map</span>
             </Button>
           </Link>
           <Link to={`/mosque/${mosque.id}`} className="flex-1">
-            <Button variant="gold" className="w-full" size="lg">
-              <Building2 size={18} />
-              View Mosque
+            <Button variant="gold" className="w-full text-sm" size="default">
+              <Building2 size={16} className="shrink-0" />
+              <span className="truncate">View Mosque</span>
             </Button>
           </Link>
         </div>
