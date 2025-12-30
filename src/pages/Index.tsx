@@ -1,12 +1,15 @@
 import React from 'react';
+import { Clock } from 'lucide-react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { LocationHeader } from '@/components/LocationHeader';
 import { NextJamaahCard } from '@/components/NextJamaahCard';
 import { MosqueCard } from '@/components/MosqueCard';
 import { mockMosques } from '@/data/mockData';
+import { useBangaloreTime } from '@/hooks/useBangaloreTime';
 
 const Index: React.FC = () => {
   const nearestMosque = mockMosques[0];
+  const { formattedTime, formattedDate } = useBangaloreTime();
 
   return (
     <MobileLayout>
@@ -25,8 +28,12 @@ const Index: React.FC = () => {
                 Preview version · Bangalore demo data only
               </p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-lg font-arabic text-primary">ب</span>
+            <div className="text-right">
+              <div className="flex items-center gap-1 text-primary">
+                <Clock size={14} />
+                <span className="text-sm font-semibold">{formattedTime}</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground">{formattedDate}</p>
             </div>
           </div>
         </header>
