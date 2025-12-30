@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { MosqueCard } from '@/components/MosqueCard';
 import { LocationHeader } from '@/components/LocationHeader';
+import { PullToRefresh } from '@/components/PullToRefresh';
 import { mockMosques } from '@/data/mockData';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBangaloreTime } from '@/hooks/useBangaloreTime';
 import { useNextPrayer } from '@/hooks/useNextPrayer';
+import { useToast } from '@/hooks/use-toast';
 import { Mosque, PrayerName } from '@/types';
 
 const filters = ['All', 'Mosque', 'Musallah', 'Eidgah', 'Jummah', 'Eid'];
@@ -40,6 +42,16 @@ const MosquesListPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const { currentTime } = useBangaloreTime();
+  const { toast } = useToast();
+
+  const handleRefresh = useCallback(async () => {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    toast({
+      title: "Updated",
+      description: "Mosque list refreshed",
+    });
+  }, [toast]);
 
   const filteredMosques = mockMosques.filter((mosque) => {
     const matchesSearch = mosque.name.toLowerCase().includes(search.toLowerCase());
@@ -55,7 +67,7 @@ const MosquesListPage: React.FC = () => {
 
   return (
     <MobileLayout>
-      <div className="safe-top bg-surface min-h-screen">
+      <PullToRefresh onRefresh={handleRefresh} className="safe-top bg-surface min-h-screen h-full">
         {/* Header */}
         <header className="px-4 pt-5 pb-3">
           <h1 className="text-2xl font-bold text-foreground">Mosques</h1>
@@ -117,7 +129,7 @@ const MosquesListPage: React.FC = () => {
             />
           ))}
         </div>
-      </div>
+      </PullToRefresh>
     </MobileLayout>
   );
 };
