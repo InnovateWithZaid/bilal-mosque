@@ -89,43 +89,43 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                   </Badge>
                 )}
               </div>
-
-              {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
-              {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
-                <div className={cn(
-                  "flex items-center gap-2 text-xs rounded-2xl px-3 py-2 mt-3 w-fit",
-                  isUrgent ? "bg-amber-500/10" : "bg-muted/50"
-                )}>
-                    <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
-                    <span className="text-muted-foreground font-medium">
-                      {nextPrayer}:
-                    </span>
-                    {athanTime && (
-                      <span className="text-muted-foreground">
-                        {athanTime}
-                      </span>
-                    )}
-                    {athanTime && iqamahTime && (
-                      <span className="text-muted-foreground/50">→</span>
-                    )}
-                    <span className="font-bold text-foreground">
-                      {iqamahTime}
-                    </span>
-                    {countdown && (
-                      <span className={cn(
-                        "font-medium ml-1",
-                        isUrgent 
-                          ? "text-amber-500 font-bold animate-pulse" 
-                          : "text-primary"
-                      )}>
-                        · {countdown}
-                      </span>
-                    )}
-                </div>
-              )}
             </div>
           </div>
         </div>
+
+        {/* Next Prayer - Full width ribbon */}
+        {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
+          <div className={cn(
+            "flex items-center gap-3 text-xs rounded-xl px-4 py-2.5 mx-3 mb-3",
+            isUrgent ? "bg-amber-500/10" : "bg-muted/50"
+          )}>
+            <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
+            <span className="text-muted-foreground font-medium">
+              {nextPrayer}:
+            </span>
+            {athanTime && (
+              <span className="text-muted-foreground">
+                {athanTime}
+              </span>
+            )}
+            {athanTime && iqamahTime && (
+              <span className="text-muted-foreground/50">→</span>
+            )}
+            <span className="font-bold text-foreground">
+              {iqamahTime}
+            </span>
+            {countdown && (
+              <span className={cn(
+                "font-medium ml-auto",
+                isUrgent 
+                  ? "text-amber-500 font-bold animate-pulse" 
+                  : "text-primary"
+              )}>
+                {countdown}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </Link>
   );
