@@ -207,9 +207,13 @@ export const MapView: React.FC = () => {
               <div className="bg-muted/30 rounded-2xl p-4 border border-border/30">
                 <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Clock size={14} className="text-primary" />
-                  Iqamah Times
+                  Prayer Times
                 </h4>
-                <PrayerTimesList times={selectedMosque.iqamahTimes} compact />
+                <PrayerTimesList 
+                  athanTimes={selectedMosque.athanTimes} 
+                  iqamahTimes={selectedMosque.iqamahTimes} 
+                  compact 
+                />
               </div>
             )}
 

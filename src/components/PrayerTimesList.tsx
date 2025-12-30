@@ -1,9 +1,10 @@
 import React from 'react';
-import { IqamahTimes, PrayerName } from '@/types';
+import { IqamahTimes, AthanTimes, PrayerName } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface PrayerTimesListProps {
-  times: IqamahTimes;
+  athanTimes: AthanTimes;
+  iqamahTimes: IqamahTimes;
   currentPrayer?: PrayerName;
   compact?: boolean;
 }
@@ -17,14 +18,29 @@ const prayers: { key: PrayerName; label: string; arabicLabel: string }[] = [
 ];
 
 export const PrayerTimesList: React.FC<PrayerTimesListProps> = ({ 
-  times, 
+  athanTimes,
+  iqamahTimes, 
   currentPrayer,
   compact = false 
 }) => {
   return (
     <div className={cn("space-y-2", compact && "space-y-1.5")}>
+      {/* Header Row */}
+      <div className="flex items-center justify-between px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        <span>Prayer</span>
+        <div className="flex items-center gap-6">
+          <span className="w-16 text-center">Athan</span>
+          <span className="w-16 text-center">Iqamah</span>
+        </div>
+      </div>
+      
       {prayers.map(({ key, label, arabicLabel }) => {
         const isActive = currentPrayer === key;
+        const hasAthan = athanTimes[key] !== '';
+        const hasIqamah = iqamahTimes[key] !== '';
+        
+        if (!hasAthan && !hasIqamah) return null;
+        
         return (
           <div
             key={key}
@@ -55,13 +71,21 @@ export const PrayerTimesList: React.FC<PrayerTimesListProps> = ({
                 </p>
               </div>
             </div>
-            <p className={cn(
-              "font-bold tabular-nums",
-              isActive ? "text-primary" : "text-foreground",
-              compact ? "text-sm" : "text-base"
-            )}>
-              {times[key]}
-            </p>
+            <div className="flex items-center gap-6">
+              <p className={cn(
+                "w-16 text-center tabular-nums text-muted-foreground",
+                compact ? "text-sm" : "text-base"
+              )}>
+                {hasAthan ? athanTimes[key] : '—'}
+              </p>
+              <p className={cn(
+                "w-16 text-center font-bold tabular-nums",
+                isActive ? "text-primary" : "text-foreground",
+                compact ? "text-sm" : "text-base"
+              )}>
+                {hasIqamah ? iqamahTimes[key] : '—'}
+              </p>
+            </div>
           </div>
         );
       })}

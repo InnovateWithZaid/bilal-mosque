@@ -51,6 +51,13 @@ export const mockMosques: Mosque[] = [
       toilets: true,
       iftaar: true,
     }),
+    athanTimes: {
+      fajr: '5:15 AM',
+      dhuhr: '12:45 PM',
+      asr: '4:30 PM',
+      maghrib: '6:30 PM',
+      isha: '7:45 PM',
+    },
     iqamahTimes: {
       fajr: '5:30 AM',
       dhuhr: '1:15 PM',
@@ -88,6 +95,13 @@ export const mockMosques: Mosque[] = [
       toilets: true,
       iftaar: true,
     }),
+    athanTimes: {
+      fajr: '5:10 AM',
+      dhuhr: '12:50 PM',
+      asr: '4:45 PM',
+      maghrib: '6:35 PM',
+      isha: '8:00 PM',
+    },
     iqamahTimes: {
       fajr: '5:25 AM',
       dhuhr: '1:30 PM',
@@ -123,6 +137,13 @@ export const mockMosques: Mosque[] = [
       womensArea: false,
       toilets: true,
     }),
+    athanTimes: {
+      fajr: '5:05 AM',
+      dhuhr: '12:50 PM',
+      asr: '4:35 PM',
+      maghrib: '6:33 PM',
+      isha: '7:55 PM',
+    },
     iqamahTimes: {
       fajr: '5:20 AM',
       dhuhr: '1:20 PM',
@@ -161,6 +182,13 @@ export const mockMosques: Mosque[] = [
       toilets: true,
       iftaar: true,
     }),
+    athanTimes: {
+      fajr: '5:10 AM',
+      dhuhr: '12:40 PM',
+      asr: '4:25 PM',
+      maghrib: '6:27 PM',
+      isha: '7:40 PM',
+    },
     iqamahTimes: {
       fajr: '5:25 AM',
       dhuhr: '1:10 PM',
@@ -191,6 +219,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: false,
     }),
+    athanTimes: {
+      fajr: '',
+      dhuhr: '12:45 PM',
+      asr: '4:15 PM',
+      maghrib: '',
+      isha: '',
+    },
     iqamahTimes: {
       fajr: '',
       dhuhr: '1:00 PM',
@@ -220,6 +255,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: false,
     }),
+    athanTimes: {
+      fajr: '',
+      dhuhr: '',
+      asr: '',
+      maghrib: '',
+      isha: '',
+    },
     iqamahTimes: {
       fajr: '',
       dhuhr: '',
@@ -249,6 +291,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: false,
     }),
+    athanTimes: {
+      fajr: '5:15 AM',
+      dhuhr: '12:45 PM',
+      asr: '4:45 PM',
+      maghrib: '6:30 PM',
+      isha: '7:45 PM',
+    },
     iqamahTimes: {
       fajr: '5:30 AM',
       dhuhr: '1:15 PM',
@@ -278,6 +327,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: false,
     }),
+    athanTimes: {
+      fajr: '',
+      dhuhr: '',
+      asr: '',
+      maghrib: '',
+      isha: '',
+    },
     iqamahTimes: {
       fajr: '',
       dhuhr: '',
@@ -308,6 +364,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: true,
     }),
+    athanTimes: {
+      fajr: '',
+      dhuhr: '',
+      asr: '',
+      maghrib: '',
+      isha: '',
+    },
     iqamahTimes: {
       fajr: '',
       dhuhr: '',
@@ -339,6 +402,13 @@ export const mockMosques: Mosque[] = [
       janazah: false,
       khutbah: true,
     }),
+    athanTimes: {
+      fajr: '',
+      dhuhr: '',
+      asr: '',
+      maghrib: '',
+      isha: '',
+    },
     iqamahTimes: {
       fajr: '',
       dhuhr: '',

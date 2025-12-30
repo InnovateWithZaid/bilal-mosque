@@ -27,14 +27,14 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
     <Link to={`/mosque/${mosque.id}`}>
       <div className="relative overflow-hidden rounded-3xl shadow-lg animate-fade-in group">
         {/* Background Image */}
-        <div className="relative h-48">
+        <div className="relative h-52">
           <img 
             src={mosqueHero} 
             alt="Mosque"
             className="w-full h-full object-cover"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           
           {/* Content Overlay */}
           <div className="absolute inset-0 p-5 flex flex-col justify-between">
@@ -48,14 +48,25 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
               </p>
             </div>
             
-            {/* Bottom - Prayer Time & Mosque */}
+            {/* Bottom - Prayer Times & Mosque */}
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Clock size={14} className="text-white" />
-                <span className="text-white text-lg font-semibold">
-                  {mosque.iqamahTimes[prayer]}
-                </span>
+              {/* Athan & Iqamah Times */}
+              <div className="flex items-center gap-4 mb-3">
+                <div className="bg-white/15 backdrop-blur-sm rounded-lg px-3 py-2">
+                  <p className="text-white/70 text-[10px] uppercase tracking-wide mb-0.5">Athan</p>
+                  <p className="text-white text-sm font-semibold">
+                    {mosque.athanTimes[prayer] || '—'}
+                  </p>
+                </div>
+                <div className="bg-white/25 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
+                  <p className="text-white/70 text-[10px] uppercase tracking-wide mb-0.5">Iqamah</p>
+                  <p className="text-white text-lg font-bold">
+                    {mosque.iqamahTimes[prayer]}
+                  </p>
+                </div>
               </div>
+              
+              {/* Mosque Name */}
               <div className="flex items-center justify-between">
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-2">
                   <span className="text-white text-sm font-medium truncate max-w-[180px]">
