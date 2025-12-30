@@ -53,28 +53,6 @@ const Index: React.FC = () => {
           </div>
         </header>
 
-        {/* Prayer Tabs */}
-        <div className="px-4 pb-4">
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
-            {(['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'] as const).map((prayer) => {
-              const isActive = prayer === nextPrayer.prayer || (prayer === 'sunrise' && false);
-              const label = prayer === 'sunrise' ? 'Sunrise' : prayerLabels[prayer as PrayerName] || prayer;
-              return (
-                <button
-                  key={prayer}
-                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                    isActive 
-                      ? 'bg-primary text-primary-foreground shadow-md' 
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                  }`}
-                >
-                  {label}
-                  {isActive && <span className="block w-1 h-1 bg-primary-foreground rounded-full mx-auto mt-0.5" />}
-                </button>
-              );
-            })}
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="px-4 space-y-6">
