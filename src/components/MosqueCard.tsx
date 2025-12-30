@@ -93,7 +93,7 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
                 <div className={cn(
-                  "flex items-center gap-2 text-xs rounded-r-2xl px-3 py-2 mt-3 w-fit -ml-4",
+                  "flex items-center gap-2 text-xs rounded-2xl px-3 py-2 mt-3 w-fit",
                   isUrgent ? "bg-amber-500/10" : "bg-muted/50"
                 )}>
                     <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
