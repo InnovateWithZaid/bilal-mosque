@@ -53,7 +53,7 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
               <div className="flex items-center gap-2 mb-2">
                 <Clock size={14} className="text-white/80" />
                 <span className="text-white/90 text-sm">
-                  Next Pray: <span className="font-semibold">{countdown}</span>
+                  Next Prayer: <span className="font-semibold">{countdown}</span>
                 </span>
               </div>
               <div className="flex items-center justify-between">
