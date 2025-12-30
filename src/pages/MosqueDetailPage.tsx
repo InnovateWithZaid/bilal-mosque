@@ -138,19 +138,6 @@ const MosqueDetailPage: React.FC = () => {
                 )}
               </div>
               
-              {/* Musallah helper text */}
-              {mosque.type === 'musallah' && (
-                <p className="text-xs text-muted-foreground mt-2 italic">
-                  Congregation availability varies
-                </p>
-              )}
-              
-              {/* Eidgah helper text */}
-              {mosque.type === 'eidgah' && (
-                <p className="text-xs text-muted-foreground mt-2 italic">
-                  Eid adhan only · Khutbah included
-                </p>
-              )}
             </div>
           </div>
 
