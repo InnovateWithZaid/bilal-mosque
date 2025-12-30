@@ -38,22 +38,22 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
           
           {/* Content Overlay */}
           <div className="absolute inset-0 p-5 flex flex-col justify-between">
-            {/* Top - Prayer Info */}
+            {/* Top - Countdown as main focus */}
             <div>
               <p className="text-white/80 text-xs font-medium uppercase tracking-wider mb-1">
-                {prayerLabels[prayer]}
+                {prayerLabels[prayer]} in
               </p>
-              <p className="text-white text-4xl font-bold">
-                {mosque.iqamahTimes[prayer]}
+              <p className="text-white text-5xl font-bold tracking-tight">
+                {countdown}
               </p>
             </div>
             
-            {/* Bottom - Next Prayer & Mosque */}
+            {/* Bottom - Prayer Time & Mosque */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Clock size={14} className="text-white/80" />
-                <span className="text-white/90 text-sm">
-                  Next Prayer: <span className="font-semibold">{countdown}</span>
+                <Clock size={14} className="text-white" />
+                <span className="text-white text-lg font-semibold">
+                  {mosque.iqamahTimes[prayer]}
                 </span>
               </div>
               <div className="flex items-center justify-between">
