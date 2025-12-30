@@ -10,6 +10,7 @@ interface MosqueCardProps {
   mosque: Mosque;
   nextPrayer?: string;
   nextTime?: string;
+  countdown?: string;
 }
 
 const getPlaceTypeIcon = (type: Mosque['type']) => {
@@ -54,7 +55,8 @@ const getPlaceTypeVariant = (type: Mosque['type']) => {
 export const MosqueCard: React.FC<MosqueCardProps> = ({ 
   mosque, 
   nextPrayer,
-  nextTime 
+  nextTime,
+  countdown
 }) => {
   const { features } = mosque;
 
@@ -129,6 +131,11 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                   <span className="font-semibold text-foreground">
                     {nextTime}
                   </span>
+                  {countdown && (
+                    <span className="text-primary font-medium ml-1">
+                      · in {countdown}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
