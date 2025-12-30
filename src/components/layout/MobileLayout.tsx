@@ -25,7 +25,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children, hideNav })
       </main>
 
       {!hideNav && (
-        <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border safe-bottom z-50">
+        <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 safe-bottom z-50 shadow-lg">
           <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-4">
             {navItems.map(({ path, icon: Icon, label }) => {
               const isActive = location.pathname === path;
@@ -34,7 +34,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children, hideNav })
                   key={path}
                   to={path}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-xl transition-all duration-200",
+                    "flex flex-col items-center justify-center gap-0.5 px-4 py-2 rounded-xl transition-all duration-200",
                     isActive 
                       ? "text-primary" 
                       : "text-muted-foreground hover:text-foreground"
@@ -42,15 +42,15 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children, hideNav })
                 >
                   <Icon 
                     size={22} 
-                    strokeWidth={isActive ? 2.5 : 2}
+                    strokeWidth={isActive ? 2.5 : 1.5}
                     className={cn(
                       "transition-transform duration-200",
-                      isActive && "scale-110"
+                      isActive && "scale-105"
                     )}
                   />
                   <span className={cn(
-                    "text-[10px] font-medium",
-                    isActive && "font-semibold"
+                    "text-[10px]",
+                    isActive ? "font-semibold" : "font-medium"
                   )}>
                     {label}
                   </span>
