@@ -118,7 +118,7 @@ const MosquesListPage: React.FC = () => {
         </div>
 
         {/* Mosques List */}
-        <div className="px-4 pb-4 space-y-3">
+        <div className="px-4 pb-4 space-y-4">
           <p className="text-xs text-muted-foreground">
             {filteredMosques.length} results
           </p>
