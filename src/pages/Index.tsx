@@ -76,7 +76,7 @@ const Index: React.FC = () => {
                 View all
               </Link>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {mockMosques.slice(0, 3).map((mosque) => (
                 <MosqueCardWithPrayer
                   key={mosque.id}
