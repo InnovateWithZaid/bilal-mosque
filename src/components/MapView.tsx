@@ -174,28 +174,44 @@ export const MapView: React.FC = () => {
             {/* Tags */}
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant="secondary" className="rounded-lg transition-transform hover:scale-105">
-                {selectedMosque.type === 'mosque' ? 'Mosque' : 'Musallah'}
+                {selectedMosque.type === 'mosque' ? '🕌 Mosque' : selectedMosque.type === 'eidgah' ? '🌙 Eidgah' : '🧎 Musallah'}
               </Badge>
-              {selectedMosque.jummahTimes.length > 0 && (
+              {selectedMosque.features.jummah && selectedMosque.jummahTimes.length > 0 && (
                 <Badge variant="outline" className="border-primary/30 text-primary rounded-lg transition-transform hover:scale-105">
                   Jummah: {selectedMosque.jummahTimes.join(', ')}
                 </Badge>
               )}
-              {selectedMosque.eidAvailable && (
+              {selectedMosque.features.eidPrayer && (
                 <Badge variant="outline" className="border-secondary/30 text-secondary rounded-lg transition-transform hover:scale-105">
                   Eid Available
                 </Badge>
               )}
             </div>
+            
+            {/* Musallah helper text */}
+            {selectedMosque.type === 'musallah' && (
+              <p className="text-xs text-muted-foreground italic">
+                Congregation availability varies
+              </p>
+            )}
+            
+            {/* Eidgah helper text */}
+            {selectedMosque.type === 'eidgah' && (
+              <p className="text-xs text-muted-foreground italic">
+                Eid adhan only · Khutbah included
+              </p>
+            )}
 
-            {/* Prayer Times */}
-            <div className="bg-muted/30 rounded-2xl p-4 border border-border/30">
-              <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Clock size={14} className="text-primary" />
-                Iqamah Times
-              </h4>
-              <PrayerTimesList times={selectedMosque.iqamahTimes} compact />
-            </div>
+            {/* Prayer Times - Only show if dailyCongregation is true */}
+            {selectedMosque.features.dailyCongregation && (
+              <div className="bg-muted/30 rounded-2xl p-4 border border-border/30">
+                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Clock size={14} className="text-primary" />
+                  Iqamah Times
+                </h4>
+                <PrayerTimesList times={selectedMosque.iqamahTimes} compact />
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
