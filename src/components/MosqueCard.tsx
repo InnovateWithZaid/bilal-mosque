@@ -118,19 +118,6 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                 )}
               </div>
 
-              {/* Musallah helper text */}
-              {mosque.type === 'musallah' && (
-                <p className="text-[10px] text-muted-foreground mt-2 italic">
-                  Congregation availability varies
-                </p>
-              )}
-
-              {/* Eidgah helper text */}
-              {mosque.type === 'eidgah' && (
-                <p className="text-[10px] text-muted-foreground mt-2 italic">
-                  Eid adhan only · Khutbah included
-                </p>
-              )}
 
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && nextTime && (
