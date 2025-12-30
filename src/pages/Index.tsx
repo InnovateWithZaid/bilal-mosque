@@ -6,10 +6,12 @@ import { NextJamaahCard } from '@/components/NextJamaahCard';
 import { MosqueCard } from '@/components/MosqueCard';
 import { mockMosques } from '@/data/mockData';
 import { useBangaloreTime } from '@/hooks/useBangaloreTime';
+import { useNextPrayer } from '@/hooks/useNextPrayer';
 
 const Index: React.FC = () => {
   const nearestMosque = mockMosques[0];
-  const { formattedTime, formattedDate } = useBangaloreTime();
+  const { currentTime, formattedTime, formattedDate } = useBangaloreTime();
+  const nextPrayer = useNextPrayer(nearestMosque.iqamahTimes, currentTime);
 
   return (
     <MobileLayout>
@@ -50,8 +52,8 @@ const Index: React.FC = () => {
           <section>
             <NextJamaahCard
               mosque={nearestMosque}
-              prayer="asr"
-              countdown="12 minutes"
+              prayer={nextPrayer.prayer}
+              countdown={nextPrayer.countdown}
             />
             <p className="text-xs text-muted-foreground text-center mt-2">
               Please confirm timings with the local mosque.
