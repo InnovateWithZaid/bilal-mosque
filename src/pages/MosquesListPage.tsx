@@ -7,12 +7,38 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useBangaloreTime } from '@/hooks/useBangaloreTime';
+import { useNextPrayer } from '@/hooks/useNextPrayer';
+import { Mosque, PrayerName } from '@/types';
 
 const filters = ['All', 'Mosque', 'Musallah', 'Eidgah', 'Jummah', 'Eid'];
+
+const prayerLabels: Record<PrayerName, string> = {
+  fajr: 'Fajr',
+  dhuhr: 'Dhuhr',
+  asr: 'Asr',
+  maghrib: 'Maghrib',
+  isha: 'Isha',
+};
+
+// Wrapper component to use hook for each mosque
+const MosqueCardWithPrayer: React.FC<{ mosque: Mosque; currentTime: Date }> = ({ mosque, currentTime }) => {
+  const nextPrayer = useNextPrayer(mosque.iqamahTimes, currentTime);
+  
+  return (
+    <MosqueCard
+      mosque={mosque}
+      nextPrayer={prayerLabels[nextPrayer.prayer]}
+      nextTime={nextPrayer.time}
+      countdown={nextPrayer.countdown}
+    />
+  );
+};
 
 const MosquesListPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const { currentTime } = useBangaloreTime();
 
   const filteredMosques = mockMosques.filter((mosque) => {
     const matchesSearch = mosque.name.toLowerCase().includes(search.toLowerCase());
@@ -77,11 +103,10 @@ const MosquesListPage: React.FC = () => {
             {filteredMosques.length} results
           </p>
           {filteredMosques.map((mosque) => (
-            <MosqueCard
+            <MosqueCardWithPrayer
               key={mosque.id}
               mosque={mosque}
-              nextPrayer="Asr"
-              nextTime={mosque.iqamahTimes.asr}
+              currentTime={currentTime}
             />
           ))}
         </div>

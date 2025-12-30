@@ -26,6 +26,7 @@ const MosqueCardWithPrayer: React.FC<{ mosque: Mosque; currentTime: Date }> = ({
       mosque={mosque}
       nextPrayer={prayerLabels[nextPrayer.prayer]}
       nextTime={nextPrayer.time}
+      countdown={nextPrayer.countdown}
     />
   );
 };
