@@ -93,13 +93,13 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
                 <div className="relative mt-3 -ml-[3.75rem]">
-                  {/* Crumpled fold effect */}
+                  {/* Oval left edge effect */}
                   <div className={cn(
-                    "absolute left-0 top-0 bottom-0 w-2",
-                    isUrgent ? "bg-amber-500/20" : "bg-primary/15"
+                    "absolute left-0 top-0 bottom-0 w-3",
+                    isUrgent ? "bg-amber-500/10" : "bg-muted/50"
                   )} 
                   style={{
-                    clipPath: "polygon(100% 0, 100% 100%, 0 85%, 40% 50%, 0 15%)"
+                    borderRadius: "50% 0 0 50%"
                   }}
                   />
                   <div className={cn(
