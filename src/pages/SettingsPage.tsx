@@ -36,7 +36,7 @@ const settingsGroups = [
       { 
         icon: Bell, 
         label: 'Notifications', 
-        description: 'Iqamah reminders, announcements',
+        description: 'You control which updates you receive from Bangalore mosques.',
         toggle: true,
         enabled: true
       },
@@ -147,10 +147,13 @@ const SettingsPage: React.FC = () => {
                 Helping Muslims find their next jama'ah
               </p>
               <Button variant="outline" className="rounded-full">
-                ❤️ Support Bilal
+                Support Bilal
               </Button>
-              <p className="text-xs text-muted-foreground mt-4">
-                Version 1.0.0
+              <p className="text-[10px] text-muted-foreground/70 mt-2">
+                Bilal is free to use. Donations help cover basic operational costs.
+              </p>
+              <p className="text-xs text-muted-foreground mt-3">
+                Version 1.0.0 · Preview
               </p>
             </Card>
           </section>

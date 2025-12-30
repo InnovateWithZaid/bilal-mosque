@@ -46,7 +46,10 @@ const AdminLoginPage: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold text-foreground">Admin Login</h1>
           <p className="text-sm text-muted-foreground mt-2">
-            For verified mosque administrators only
+            For verified Bangalore mosque administrators only.
+          </p>
+          <p className="text-xs text-muted-foreground/70 mt-1">
+            Access requires approval.
           </p>
         </div>
 

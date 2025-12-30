@@ -14,9 +14,9 @@ export const MapView: React.FC = () => {
   const [selectedMosque, setSelectedMosque] = useState<Mosque | null>(null);
   const [hoveredMosque, setHoveredMosque] = useState<string | null>(null);
   
-  // Mumbai center coordinates
-  const centerLat = 19.076;
-  const centerLng = 72.8777;
+  // Bangalore center coordinates
+  const centerLat = 12.9716;
+  const centerLng = 77.5946;
 
   return (
     <div className="relative w-full h-full min-h-[calc(100vh-8rem)] overflow-hidden">
@@ -102,7 +102,7 @@ export const MapView: React.FC = () => {
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card animate-pulse" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-foreground">Mumbai, Maharashtra</p>
+                <p className="text-sm font-semibold text-foreground">Bangalore, Karnataka</p>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <Sparkles size={10} className="text-primary" />
                   {mockMosques.length} mosques nearby

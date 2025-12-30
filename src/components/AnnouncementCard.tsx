@@ -93,6 +93,13 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ announcement
             </span>
           </div>
         )}
+
+        {/* Janazah disclaimer */}
+        {announcement.type === 'janazah' && (
+          <p className="text-[10px] text-muted-foreground/70 mt-3 text-center">
+            Please confirm details with the mosque.
+          </p>
+        )}
       </CardContent>
     </Card>
   );
