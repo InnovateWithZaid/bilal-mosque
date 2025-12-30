@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, MapPin, Clock, ChevronRight } from 'lucide-react';
+import { Building2, MapPin, Clock, ChevronRight, Moon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mosque } from '@/types';
@@ -12,11 +12,52 @@ interface MosqueCardProps {
   nextTime?: string;
 }
 
+const getPlaceTypeIcon = (type: Mosque['type']) => {
+  switch (type) {
+    case 'mosque':
+      return '🕌';
+    case 'musallah':
+      return '🧎';
+    case 'eidgah':
+      return '🌙';
+    default:
+      return '🕌';
+  }
+};
+
+const getPlaceTypeLabel = (type: Mosque['type']) => {
+  switch (type) {
+    case 'mosque':
+      return 'Mosque';
+    case 'musallah':
+      return 'Musallah';
+    case 'eidgah':
+      return 'Eidgah';
+    default:
+      return 'Mosque';
+  }
+};
+
+const getPlaceTypeVariant = (type: Mosque['type']) => {
+  switch (type) {
+    case 'mosque':
+      return 'default';
+    case 'musallah':
+      return 'secondary';
+    case 'eidgah':
+      return 'outline';
+    default:
+      return 'default';
+  }
+};
+
 export const MosqueCard: React.FC<MosqueCardProps> = ({ 
   mosque, 
   nextPrayer,
   nextTime 
 }) => {
+  const { features } = mosque;
+
   return (
     <Link to={`/mosque/${mosque.id}`}>
       <Card variant="interactive" className="animate-fade-in">
@@ -24,15 +65,14 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
           <div className="flex items-start gap-3">
             {/* Icon */}
             <div className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0",
+              "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-2xl",
               mosque.type === 'mosque' 
                 ? "bg-primary/10" 
+                : mosque.type === 'eidgah'
+                ? "bg-amber-500/10"
                 : "bg-secondary/10"
             )}>
-              <Building2 
-                size={24} 
-                className={mosque.type === 'mosque' ? "text-primary" : "text-secondary"} 
-              />
+              {getPlaceTypeIcon(mosque.type)}
             </div>
 
             {/* Content */}
@@ -52,23 +92,48 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
 
               {/* Tags */}
               <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-                <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
-                  {mosque.type === 'mosque' ? 'Mosque' : 'Musallah'}
+                <Badge 
+                  variant={getPlaceTypeVariant(mosque.type) as any} 
+                  className={cn(
+                    "text-[10px] px-2 py-0.5",
+                    mosque.type === 'eidgah' && "border-amber-500/30 text-amber-600"
+                  )}
+                >
+                  {getPlaceTypeIcon(mosque.type)} {getPlaceTypeLabel(mosque.type)}
                 </Badge>
-                {mosque.jummahTimes.length > 0 && (
+                {features.jummah && (
                   <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary">
                     Jummah
                   </Badge>
                 )}
-                {mosque.eidAvailable && (
+                {features.eidPrayer && mosque.type !== 'eidgah' && (
                   <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-secondary/30 text-secondary">
                     Eid
                   </Badge>
                 )}
+                {features.janazah && (
+                  <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-muted-foreground/30 text-muted-foreground">
+                    Janazah
+                  </Badge>
+                )}
               </div>
 
-              {/* Next Prayer */}
-              {nextPrayer && nextTime && (
+              {/* Musallah helper text */}
+              {mosque.type === 'musallah' && (
+                <p className="text-[10px] text-muted-foreground mt-2 italic">
+                  Congregation availability varies
+                </p>
+              )}
+
+              {/* Eidgah helper text */}
+              {mosque.type === 'eidgah' && (
+                <p className="text-[10px] text-muted-foreground mt-2 italic">
+                  Eid adhan only · Khutbah included
+                </p>
+              )}
+
+              {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
+              {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && nextTime && (
                 <div className="flex items-center gap-1.5 mt-3 text-xs">
                   <Clock size={12} className="text-primary" />
                   <span className="text-muted-foreground">

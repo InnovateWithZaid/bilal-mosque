@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-const filters = ['All', 'Mosque', 'Musallah', 'Jummah', 'Eid'];
+const filters = ['All', 'Mosque', 'Musallah', 'Eidgah', 'Jummah', 'Eid'];
 
 const MosquesListPage: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -20,8 +20,9 @@ const MosquesListPage: React.FC = () => {
       activeFilter === 'All' ||
       (activeFilter === 'Mosque' && mosque.type === 'mosque') ||
       (activeFilter === 'Musallah' && mosque.type === 'musallah') ||
-      (activeFilter === 'Jummah' && mosque.jummahTimes.length > 0) ||
-      (activeFilter === 'Eid' && mosque.eidAvailable);
+      (activeFilter === 'Eidgah' && mosque.type === 'eidgah') ||
+      (activeFilter === 'Jummah' && mosque.features.jummah) ||
+      (activeFilter === 'Eid' && mosque.features.eidPrayer);
     return matchesSearch && matchesFilter;
   });
 

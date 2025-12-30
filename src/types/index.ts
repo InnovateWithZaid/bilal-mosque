@@ -1,13 +1,37 @@
+export type PlaceType = 'mosque' | 'musallah' | 'eidgah';
+
+export interface PlaceFeatures {
+  adhan: boolean;
+  dailyCongregation: boolean;
+  jummah: boolean;
+  taraweeh: boolean;
+  eidPrayer: boolean;
+  eidAdhanOnly: boolean;
+  janazah: boolean;
+  khutbah: boolean;
+}
+
+export interface PlaceFacilities {
+  ablution: boolean;
+  carParking: 'available' | 'limited' | 'none';
+  womensArea: boolean;
+  accessibility: boolean;
+  toilets: boolean;
+  iftaar: boolean;
+}
+
 export interface Mosque {
   id: string;
   name: string;
   address: string;
   lat: number;
   lng: number;
-  type: 'mosque' | 'musallah';
+  type: PlaceType;
+  features: PlaceFeatures;
+  facilities?: PlaceFacilities;
   iqamahTimes: IqamahTimes;
   jummahTimes: string[];
-  eidAvailable: boolean;
+  eidTimes?: string[];
   adminUids: string[];
   lastUpdatedAt: Date;
   distance?: number;
