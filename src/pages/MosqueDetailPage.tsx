@@ -47,7 +47,7 @@ const MosqueDetailPage: React.FC = () => {
 
   if (!mosque) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <p className="text-muted-foreground">Mosque not found</p>
       </div>
     );
@@ -79,23 +79,24 @@ const MosqueDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background safe-top pb-20">
+    <div className="min-h-screen bg-surface safe-top pb-20">
       {/* Header */}
-      <header className="sticky top-0 bg-background/95 backdrop-blur-xl z-10 border-b border-border">
+      <header className="sticky top-0 bg-background/95 backdrop-blur-xl z-10 border-b border-border shadow-soft">
         <div className="flex items-center justify-between p-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft size={22} />
+          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-muted" onClick={() => navigate(-1)}>
+            <ArrowLeft size={22} className="text-foreground" />
           </Button>
           <div className="flex gap-2">
             <Button 
               variant={isFollowing ? "default" : "outline"} 
               size="icon"
+              className="rounded-xl"
               onClick={handleFollow}
             >
               <Heart size={18} className={cn(isFollowing && "fill-current")} />
             </Button>
             <Link to={`/mosque/${id}/report`}>
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="rounded-xl">
                 <Flag size={18} />
               </Button>
             </Link>
@@ -103,12 +104,12 @@ const MosqueDetailPage: React.FC = () => {
         </div>
       </header>
 
-      <div className="px-4 py-4 space-y-6">
+      <div className="px-4 py-5 space-y-5">
         {/* Mosque Info */}
         <section className="animate-fade-in">
           <div className="flex items-start gap-4">
             <div className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl",
+              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl shadow-soft",
               mosque.type === 'mosque' ? "bg-primary/10" : 
               mosque.type === 'eidgah' ? "bg-amber-500/10" : "bg-secondary/10"
             )}>
@@ -117,27 +118,27 @@ const MosqueDetailPage: React.FC = () => {
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl font-bold text-foreground">{mosque.name}</h1>
               <p className="text-sm text-muted-foreground mt-1">{mosque.address}</p>
-              <div className="flex items-center gap-2 mt-2 flex-wrap">
+              <div className="flex items-center gap-2 mt-3 flex-wrap">
                 <Badge 
                   variant={mosque.type === 'mosque' ? 'default' : 'secondary'}
                   className={cn(
+                    "rounded-full",
                     mosque.type === 'eidgah' && "border-amber-500/30 text-amber-600 bg-amber-500/10"
                   )}
                 >
                   {getPlaceTypeIcon(mosque.type)} {getPlaceTypeLabel(mosque.type)}
                 </Badge>
                 {features.eidPrayer && (
-                  <Badge variant="outline" className="border-secondary/30 text-secondary">
+                  <Badge variant="outline" className="rounded-full border-cyan/30 text-cyan bg-cyan/5">
                     Eid Available
                   </Badge>
                 )}
                 {features.janazah && (
-                  <Badge variant="outline" className="border-muted-foreground/30 text-muted-foreground">
+                  <Badge variant="outline" className="rounded-full border-muted-foreground/30 text-muted-foreground">
                     Janazah
                   </Badge>
                 )}
               </div>
-              
             </div>
           </div>
 
@@ -146,9 +147,9 @@ const MosqueDetailPage: React.FC = () => {
             href={`https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lng}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block mt-4"
+            className="block mt-5"
           >
-            <Button variant="teal" className="w-full" size="lg">
+            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-md" size="lg">
               <Navigation size={18} />
               Navigate ({mosque.distance} km away)
               <ExternalLink size={14} />
@@ -159,10 +160,12 @@ const MosqueDetailPage: React.FC = () => {
         {/* Iqamah Times - Only show if dailyCongregation is true */}
         {features.dailyCongregation && (
           <section className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <Card variant="elevated">
+            <Card className="bg-card border border-border rounded-3xl shadow-soft">
               <CardContent className="p-5">
                 <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Clock size={18} className="text-primary" />
+                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Clock size={16} className="text-primary" />
+                  </div>
                   Iqamah Times
                 </h2>
                 <PrayerTimesList times={mosque.iqamahTimes} currentPrayer="asr" />
@@ -177,20 +180,22 @@ const MosqueDetailPage: React.FC = () => {
         {/* Jummah Times - Only show if jummah is true */}
         {features.jummah && mosque.jummahTimes.length > 0 && (
           <section className="animate-fade-in" style={{ animationDelay: '0.15s' }}>
-            <Card variant="gold">
+            <Card className="bg-card border border-primary/20 rounded-3xl shadow-soft">
               <CardContent className="p-5">
-                <h2 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <Calendar size={18} className="text-primary" />
+                <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Calendar size={16} className="text-primary" />
+                  </div>
                   Jummah Prayer
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {mosque.jummahTimes.map((time, index) => (
                     <div 
                       key={index}
-                      className="bg-muted/50 rounded-lg px-4 py-2"
+                      className="bg-muted rounded-xl px-4 py-3"
                     >
                       <p className="text-xs text-muted-foreground">Khutbah {index + 1}</p>
-                      <p className="font-bold text-foreground">{time}</p>
+                      <p className="font-bold text-foreground text-lg">{time}</p>
                     </div>
                   ))}
                 </div>
@@ -202,19 +207,22 @@ const MosqueDetailPage: React.FC = () => {
         {/* Eid Times - Only show if eidPrayer is true */}
         {features.eidPrayer && mosque.eidTimes && mosque.eidTimes.length > 0 && (
           <section className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Card className="border-amber-500/20 bg-amber-500/5">
+            <Card className="border-amber-500/20 bg-amber-50 rounded-3xl shadow-soft">
               <CardContent className="p-5">
-                <h2 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
-                  🌙 Eid Prayer
+                <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                    🌙
+                  </div>
+                  Eid Prayer
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {mosque.eidTimes.map((time, index) => (
                     <div 
                       key={index}
-                      className="bg-amber-500/10 rounded-lg px-4 py-2"
+                      className="bg-amber-500/10 rounded-xl px-4 py-3"
                     >
                       <p className="text-xs text-muted-foreground">Jama'ah {index + 1}</p>
-                      <p className="font-bold text-foreground">{time}</p>
+                      <p className="font-bold text-foreground text-lg">{time}</p>
                     </div>
                   ))}
                 </div>
@@ -231,46 +239,46 @@ const MosqueDetailPage: React.FC = () => {
         {/* Facilities - Only show for Mosques */}
         {mosque.type === 'mosque' && facilities && (
           <section className="animate-fade-in" style={{ animationDelay: '0.25s' }}>
-            <Card variant="elevated">
+            <Card className="bg-card border border-border rounded-3xl shadow-soft">
               <CardContent className="p-5">
                 <h2 className="text-base font-semibold text-foreground mb-4">
                   Facilities
                 </h2>
                 <div className="grid grid-cols-2 gap-3">
                   {facilities.ablution && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Droplets size={16} className="text-primary" />
-                      <span>Ablution (Wudhu)</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <Droplets size={18} className="text-primary" />
+                      <span className="text-sm text-foreground">Ablution (Wudhu)</span>
                     </div>
                   )}
                   {facilities.carParking !== 'none' && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Car size={16} className="text-primary" />
-                      <span>{getParkingLabel(facilities.carParking)}</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <Car size={18} className="text-primary" />
+                      <span className="text-sm text-foreground">{getParkingLabel(facilities.carParking)}</span>
                     </div>
                   )}
                   {facilities.womensArea && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Baby size={16} className="text-primary" />
-                      <span>Women's Area</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <Baby size={18} className="text-primary" />
+                      <span className="text-sm text-foreground">Women's Area</span>
                     </div>
                   )}
                   {facilities.accessibility && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Accessibility size={16} className="text-primary" />
-                      <span>Accessibility</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <Accessibility size={18} className="text-primary" />
+                      <span className="text-sm text-foreground">Accessibility</span>
                     </div>
                   )}
                   {facilities.iftaar && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <UtensilsCrossed size={16} className="text-primary" />
-                      <span>Iftaar (Ramadan)</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <UtensilsCrossed size={18} className="text-primary" />
+                      <span className="text-sm text-foreground">Iftaar (Ramadan)</span>
                     </div>
                   )}
                   {features.janazah && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="text-base">🤲</span>
-                      <span>Janazah Conducted</span>
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-xl">
+                      <span className="text-lg">🤲</span>
+                      <span className="text-sm text-foreground">Janazah Conducted</span>
                     </div>
                   )}
                 </div>
@@ -284,11 +292,13 @@ const MosqueDetailPage: React.FC = () => {
           <section className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-                <Bell size={18} className="text-primary" />
+                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Bell size={16} className="text-primary" />
+                </div>
                 Community Updates
               </h2>
               <Link to={`/mosque/${id}/community`}>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 hover:bg-primary/5 rounded-xl">
                   View All
                 </Button>
               </Link>
@@ -301,7 +311,7 @@ const MosqueDetailPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <Card variant="elevated">
+              <Card className="bg-card border border-border rounded-3xl shadow-soft">
                 <CardContent className="p-6 text-center">
                   <Users size={32} className="mx-auto text-muted-foreground mb-2" />
                   <p className="text-sm text-muted-foreground">
