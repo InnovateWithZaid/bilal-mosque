@@ -70,20 +70,22 @@ const ReportPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background safe-top pb-8">
+    <div className="min-h-screen bg-surface safe-top pb-8">
       {/* Header */}
-      <header className="sticky top-0 bg-background/95 backdrop-blur-xl z-10 border-b border-border">
+      <header className="sticky top-0 bg-background/95 backdrop-blur-xl z-10 border-b border-border shadow-soft">
         <div className="flex items-center gap-3 p-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft size={22} />
+          <Button variant="ghost" size="icon" className="rounded-xl hover:bg-muted" onClick={() => navigate(-1)}>
+            <ArrowLeft size={22} className="text-foreground" />
           </Button>
           <div className="flex-1">
             <h1 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <Flag size={18} className="text-destructive" />
+              <div className="w-8 h-8 rounded-xl bg-destructive/10 flex items-center justify-center">
+                <Flag size={16} className="text-destructive" />
+              </div>
               Report Issue
             </h1>
             {mosque && (
-              <p className="text-xs text-muted-foreground">{mosque.name}</p>
+              <p className="text-xs text-muted-foreground ml-10">{mosque.name}</p>
             )}
           </div>
         </div>
@@ -92,21 +94,25 @@ const ReportPage: React.FC = () => {
       <div className="p-4 space-y-6">
         {/* Issue Type Selection */}
         <section>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
             What's wrong?
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {issueTypes.map(({ key, label, icon: Icon, description }) => (
               <Card 
                 key={key}
-                variant={selectedType === key ? "gold" : "interactive"}
+                className={cn(
+                  "cursor-pointer transition-all rounded-2xl border",
+                  selectedType === key 
+                    ? "border-primary bg-primary/5 shadow-md" 
+                    : "border-border bg-card shadow-soft hover:border-primary/30"
+                )}
                 onClick={() => setSelectedType(key)}
-                className="cursor-pointer"
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
                     <div className={cn(
-                      "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
+                      "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
                       selectedType === key ? "bg-primary/20" : "bg-muted"
                     )}>
                       <Icon 
@@ -139,7 +145,7 @@ const ReportPage: React.FC = () => {
 
         {/* Description */}
         <section>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
             Additional Details (Optional)
           </h2>
           <Textarea
@@ -147,15 +153,13 @@ const ReportPage: React.FC = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
-            className="bg-muted border-0 resize-none"
+            className="bg-card border border-border rounded-2xl resize-none shadow-soft focus:ring-2 focus:ring-primary/20"
           />
         </section>
 
         {/* Submit Button */}
         <Button 
-          variant="gold" 
-          size="xl" 
-          className="w-full"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl shadow-md h-12 text-base font-semibold"
           onClick={handleSubmit}
           disabled={isSubmitting}
         >

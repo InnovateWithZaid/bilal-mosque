@@ -55,16 +55,18 @@ const MosquesListPage: React.FC = () => {
 
   return (
     <MobileLayout>
-      <div className="safe-top">
+      <div className="safe-top bg-surface min-h-screen">
         {/* Header */}
-        <header className="px-4 pt-4 pb-2">
-          <h1 className="text-xl font-bold text-foreground">Mosques</h1>
+        <header className="px-4 pt-5 pb-3">
+          <h1 className="text-2xl font-bold text-foreground">Mosques</h1>
         </header>
 
-        <LocationHeader 
-          location="Bangalore, Karnataka" 
-          subtext="3 km radius"
-        />
+        <div className="px-4 mb-3">
+          <LocationHeader 
+            location="Bangalore, Karnataka" 
+            subtext="3 km radius"
+          />
+        </div>
 
         {/* Search and Filter */}
         <div className="px-4 py-3 space-y-3">
@@ -75,11 +77,11 @@ const MosquesListPage: React.FC = () => {
                 placeholder="Search mosques..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-muted border-0"
+                className="pl-10 bg-card border border-border rounded-xl shadow-soft focus:ring-2 focus:ring-primary/20"
               />
             </div>
-            <Button variant="outline" size="icon">
-              <SlidersHorizontal size={18} />
+            <Button variant="outline" size="icon" className="rounded-xl border-border shadow-soft hover:bg-muted">
+              <SlidersHorizontal size={18} className="text-foreground" />
             </Button>
           </div>
 
@@ -89,7 +91,11 @@ const MosquesListPage: React.FC = () => {
               <Badge
                 key={filter}
                 variant={activeFilter === filter ? "default" : "outline"}
-                className="cursor-pointer whitespace-nowrap px-3 py-1.5"
+                className={`cursor-pointer whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeFilter === filter 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
                 onClick={() => setActiveFilter(filter)}
               >
                 {filter}

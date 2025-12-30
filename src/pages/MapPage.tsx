@@ -11,11 +11,11 @@ const MapPage: React.FC = () => {
         {/* Header */}
         <header className="absolute top-0 left-0 right-0 z-10 safe-top">
           <div className="flex items-center justify-between p-4">
-            <h1 className="text-lg font-semibold text-foreground bg-card/80 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+            <h1 className="text-base font-semibold text-foreground bg-card/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-soft border border-border">
               Nearby Mosques
             </h1>
-            <Button variant="secondary" size="icon" className="bg-card/80 backdrop-blur-sm">
-              <Filter size={18} />
+            <Button variant="outline" size="icon" className="bg-card/95 backdrop-blur-sm rounded-xl shadow-soft border-border hover:bg-muted">
+              <Filter size={18} className="text-foreground" />
             </Button>
           </div>
         </header>
