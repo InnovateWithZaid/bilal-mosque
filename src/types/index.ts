@@ -20,6 +20,17 @@ export interface PlaceFacilities {
   iftaar: boolean;
 }
 
+export interface PrayerTimes {
+  fajr: string;
+  dhuhr: string;
+  asr: string;
+  maghrib: string;
+  isha: string;
+}
+
+export type IqamahTimes = PrayerTimes;
+export type AthanTimes = PrayerTimes;
+
 export interface Mosque {
   id: string;
   name: string;
@@ -29,20 +40,13 @@ export interface Mosque {
   type: PlaceType;
   features: PlaceFeatures;
   facilities?: PlaceFacilities;
+  athanTimes: AthanTimes;
   iqamahTimes: IqamahTimes;
   jummahTimes: string[];
   eidTimes?: string[];
   adminUids: string[];
   lastUpdatedAt: Date;
   distance?: number;
-}
-
-export interface IqamahTimes {
-  fajr: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
 }
 
 export type AnnouncementType = 'talk' | 'salah_update' | 'janazah' | 'notice';

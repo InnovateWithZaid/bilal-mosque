@@ -8,7 +8,8 @@ import { cn } from '@/lib/utils';
 interface MosqueCardProps {
   mosque: Mosque;
   nextPrayer?: string;
-  nextTime?: string;
+  athanTime?: string;
+  iqamahTime?: string;
   countdown?: string;
   minutesUntil?: number;
 }
@@ -29,7 +30,8 @@ const getPlaceTypeLabel = (type: Mosque['type']) => {
 export const MosqueCard: React.FC<MosqueCardProps> = ({ 
   mosque, 
   nextPrayer,
-  nextTime,
+  athanTime,
+  iqamahTime,
   countdown,
   minutesUntil
 }) => {
@@ -89,21 +91,29 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
               </div>
 
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
-              {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && nextTime && (
+              {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
                 <div className={cn(
-                  "flex items-center gap-1.5 mt-3 text-xs bg-muted/50 rounded-lg px-2.5 py-1.5 w-fit",
+                  "flex items-center gap-2 mt-3 text-xs bg-muted/50 rounded-lg px-2.5 py-2 w-fit",
                   isUrgent && "bg-amber-500/10"
                 )}>
                   <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
-                  <span className="text-muted-foreground">
+                  <span className="text-muted-foreground font-medium">
                     {nextPrayer}:
                   </span>
-                  <span className="font-semibold text-foreground">
-                    {nextTime}
+                  {athanTime && (
+                    <span className="text-muted-foreground">
+                      {athanTime}
+                    </span>
+                  )}
+                  {athanTime && iqamahTime && (
+                    <span className="text-muted-foreground/50">→</span>
+                  )}
+                  <span className="font-bold text-foreground">
+                    {iqamahTime}
                   </span>
                   {countdown && (
                     <span className={cn(
-                      "font-medium",
+                      "font-medium ml-1",
                       isUrgent 
                         ? "text-amber-500 font-bold animate-pulse" 
                         : "text-primary"

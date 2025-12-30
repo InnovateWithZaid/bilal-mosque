@@ -166,9 +166,13 @@ const MosqueDetailPage: React.FC = () => {
                   <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Clock size={16} className="text-primary" />
                   </div>
-                  Iqamah Times
+                  Prayer Times
                 </h2>
-                <PrayerTimesList times={mosque.iqamahTimes} currentPrayer="asr" />
+                <PrayerTimesList 
+                  athanTimes={mosque.athanTimes} 
+                  iqamahTimes={mosque.iqamahTimes} 
+                  currentPrayer="asr" 
+                />
                 <p className="text-xs text-muted-foreground mt-4 text-center">
                   Last updated: Today
                 </p>
