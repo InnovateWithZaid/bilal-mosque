@@ -11,6 +11,7 @@ interface MosqueCardProps {
   nextPrayer?: string;
   nextTime?: string;
   countdown?: string;
+  minutesUntil?: number;
 }
 
 const getPlaceTypeIcon = (type: Mosque['type']) => {
@@ -56,9 +57,11 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
   mosque, 
   nextPrayer,
   nextTime,
-  countdown
+  countdown,
+  minutesUntil
 }) => {
   const { features } = mosque;
+  const isUrgent = minutesUntil !== undefined && minutesUntil <= 5 && minutesUntil >= 0;
 
   return (
     <Link to={`/mosque/${mosque.id}`}>
@@ -123,8 +126,11 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
 
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && nextTime && (
-                <div className="flex items-center gap-1.5 mt-3 text-xs">
-                  <Clock size={12} className="text-primary" />
+                <div className={cn(
+                  "flex items-center gap-1.5 mt-3 text-xs",
+                  isUrgent && "animate-pulse"
+                )}>
+                  <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
                   <span className="text-muted-foreground">
                     {nextPrayer}:
                   </span>
@@ -132,7 +138,12 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                     {nextTime}
                   </span>
                   {countdown && (
-                    <span className="text-primary font-medium ml-1">
+                    <span className={cn(
+                      "font-medium ml-1",
+                      isUrgent 
+                        ? "text-amber-500 font-bold" 
+                        : "text-primary"
+                    )}>
                       · in {countdown}
                     </span>
                   )}
