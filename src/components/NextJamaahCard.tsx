@@ -1,9 +1,8 @@
 import React from 'react';
-import { Clock, Navigation, Building2 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Clock, ChevronRight } from 'lucide-react';
 import { Mosque, PrayerName } from '@/types';
 import { Link } from 'react-router-dom';
+import mosqueHero from '@/assets/mosque-hero.jpg';
 
 interface NextJamaahCardProps {
   mosque: Mosque;
@@ -25,71 +24,50 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
   countdown 
 }) => {
   return (
-    <Card variant="gold" className="overflow-hidden animate-fade-in">
-      <CardContent className="p-0">
-        {/* Header */}
-        <div className="p-5 pb-4">
-          <div className="flex items-start justify-between">
+    <Link to={`/mosque/${mosque.id}`}>
+      <div className="relative overflow-hidden rounded-3xl shadow-lg animate-fade-in group">
+        {/* Background Image */}
+        <div className="relative h-48">
+          <img 
+            src={mosqueHero} 
+            alt="Mosque"
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          
+          {/* Content Overlay */}
+          <div className="absolute inset-0 p-5 flex flex-col justify-between">
+            {/* Top - Prayer Info */}
             <div>
-              <p className="text-xs font-medium text-primary uppercase tracking-wider mb-1">
-                Upcoming Jama'ah (Preview)
-              </p>
-              <h3 className="text-2xl font-bold text-foreground">
+              <p className="text-white/80 text-xs font-medium uppercase tracking-wider mb-1">
                 {prayerLabels[prayer]}
-              </h3>
+              </p>
+              <p className="text-white text-4xl font-bold">
+                {mosque.iqamahTimes[prayer]}
+              </p>
             </div>
-            <div className="text-right">
-              <div className="flex items-center gap-1.5 text-primary">
-                <Clock size={16} />
-                <span className="text-sm font-semibold">
-                  {mosque.iqamahTimes[prayer]}
+            
+            {/* Bottom - Next Prayer & Mosque */}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Clock size={14} className="text-white/80" />
+                <span className="text-white/90 text-sm">
+                  Next Pray: <span className="font-semibold">{countdown}</span>
                 </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-2">
+                  <span className="text-white text-sm font-medium truncate max-w-[180px]">
+                    {mosque.name}
+                  </span>
+                  <ChevronRight size={14} className="text-white/80 group-hover:translate-x-0.5 transition-transform" />
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Countdown */}
-        <div className="px-5 pb-4">
-          <div className="bg-muted/50 rounded-xl p-4 text-center">
-            <p className="text-xs text-muted-foreground mb-1">Starts in</p>
-            <p className="text-3xl font-bold text-gradient-gold font-arabic">
-              {countdown}
-            </p>
-          </div>
-        </div>
-
-        {/* Mosque Info */}
-        <div className="px-5 pb-4">
-          <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
-            <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center">
-              <Building2 size={20} className="text-secondary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground truncate">{mosque.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {mosque.distance} km away
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="px-5 pb-5 flex flex-col sm:flex-row gap-2 sm:gap-3">
-          <Link to="/map" className="flex-1">
-            <Button variant="outline" className="w-full text-sm" size="default">
-              <Navigation size={16} className="shrink-0" />
-              <span className="truncate">View on Map</span>
-            </Button>
-          </Link>
-          <Link to={`/mosque/${mosque.id}`} className="flex-1">
-            <Button variant="gold" className="w-full text-sm" size="default">
-              <Building2 size={16} className="shrink-0" />
-              <span className="truncate">View Mosque</span>
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Link>
   );
 };

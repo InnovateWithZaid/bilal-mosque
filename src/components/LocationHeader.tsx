@@ -11,21 +11,19 @@ export const LocationHeader: React.FC<LocationHeaderProps> = ({ location, subtex
   return (
     <Link 
       to="/location"
-      className="flex items-center gap-2 px-4 py-3 hover:bg-muted/50 transition-colors rounded-xl active:scale-[0.98]"
+      className="flex items-center gap-2 mx-4 px-3 py-2.5 bg-card hover:bg-muted/30 transition-colors rounded-xl border border-border/50 shadow-sm active:scale-[0.99]"
     >
-      <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-        <MapPin size={18} className="text-primary" />
+      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+        <MapPin size={16} className="text-primary" />
       </div>
       <div className="flex-1 min-w-0">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Your Location</p>
         <div className="flex items-center gap-1">
           <span className="text-sm font-semibold text-foreground truncate">
             {location}
           </span>
-          <ChevronDown size={16} className="text-muted-foreground flex-shrink-0" />
+          <ChevronDown size={14} className="text-muted-foreground flex-shrink-0" />
         </div>
-        {subtext && (
-          <p className="text-xs text-muted-foreground truncate">{subtext}</p>
-        )}
       </div>
     </Link>
   );
