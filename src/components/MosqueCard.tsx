@@ -92,20 +92,10 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
 
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
-                <div className="relative mt-3 -ml-[3.75rem]">
-                  {/* Oval left edge effect */}
-                  <div className={cn(
-                    "absolute left-0 top-0 bottom-0 w-3",
-                    isUrgent ? "bg-amber-500/10" : "bg-muted/50"
-                  )} 
-                  style={{
-                    borderRadius: "50% 0 0 50%"
-                  }}
-                  />
-                  <div className={cn(
-                    "flex items-center gap-2 text-xs rounded-r-lg pl-4 pr-3 py-2 ml-2",
-                    isUrgent ? "bg-amber-500/10" : "bg-muted/50"
-                  )}>
+                <div className={cn(
+                  "flex items-center gap-2 text-xs rounded-r-lg rounded-l-full pl-4 pr-3 py-2 mt-3 -ml-[3.75rem]",
+                  isUrgent ? "bg-amber-500/10" : "bg-muted/50"
+                )}>
                     <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
                     <span className="text-muted-foreground font-medium">
                       {nextPrayer}:
@@ -131,7 +121,6 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                         · {countdown}
                       </span>
                     )}
-                  </div>
                 </div>
               )}
             </div>
