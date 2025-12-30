@@ -92,35 +92,46 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
 
               {/* Next Prayer - Only show if dailyCongregation is true and not eidgah */}
               {features.dailyCongregation && mosque.type !== 'eidgah' && nextPrayer && iqamahTime && (
-                <div className={cn(
-                  "flex items-center gap-2 mt-3 text-xs bg-muted/50 rounded-lg px-2.5 py-2 w-fit",
-                  isUrgent && "bg-amber-500/10"
-                )}>
-                  <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
-                  <span className="text-muted-foreground font-medium">
-                    {nextPrayer}:
-                  </span>
-                  {athanTime && (
-                    <span className="text-muted-foreground">
-                      {athanTime}
+                <div className="relative mt-3 -ml-[3.75rem]">
+                  {/* Crumpled fold effect */}
+                  <div className={cn(
+                    "absolute left-0 top-0 bottom-0 w-2",
+                    isUrgent ? "bg-amber-500/20" : "bg-primary/15"
+                  )} 
+                  style={{
+                    clipPath: "polygon(100% 0, 100% 100%, 0 85%, 40% 50%, 0 15%)"
+                  }}
+                  />
+                  <div className={cn(
+                    "flex items-center gap-2 text-xs rounded-r-lg pl-4 pr-3 py-2 ml-2",
+                    isUrgent ? "bg-amber-500/10" : "bg-muted/50"
+                  )}>
+                    <Clock size={12} className={cn("text-primary", isUrgent && "text-amber-500")} />
+                    <span className="text-muted-foreground font-medium">
+                      {nextPrayer}:
                     </span>
-                  )}
-                  {athanTime && iqamahTime && (
-                    <span className="text-muted-foreground/50">→</span>
-                  )}
-                  <span className="font-bold text-foreground">
-                    {iqamahTime}
-                  </span>
-                  {countdown && (
-                    <span className={cn(
-                      "font-medium ml-1",
-                      isUrgent 
-                        ? "text-amber-500 font-bold animate-pulse" 
-                        : "text-primary"
-                    )}>
-                      · {countdown}
+                    {athanTime && (
+                      <span className="text-muted-foreground">
+                        {athanTime}
+                      </span>
+                    )}
+                    {athanTime && iqamahTime && (
+                      <span className="text-muted-foreground/50">→</span>
+                    )}
+                    <span className="font-bold text-foreground">
+                      {iqamahTime}
                     </span>
-                  )}
+                    {countdown && (
+                      <span className={cn(
+                        "font-medium ml-1",
+                        isUrgent 
+                          ? "text-amber-500 font-bold animate-pulse" 
+                          : "text-primary"
+                      )}>
+                        · {countdown}
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
