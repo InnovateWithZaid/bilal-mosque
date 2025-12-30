@@ -7,6 +7,28 @@ import { MosqueCard } from '@/components/MosqueCard';
 import { mockMosques } from '@/data/mockData';
 import { useBangaloreTime } from '@/hooks/useBangaloreTime';
 import { useNextPrayer } from '@/hooks/useNextPrayer';
+import { Mosque, PrayerName } from '@/types';
+
+const prayerLabels: Record<PrayerName, string> = {
+  fajr: 'Fajr',
+  dhuhr: 'Dhuhr',
+  asr: 'Asr',
+  maghrib: 'Maghrib',
+  isha: 'Isha',
+};
+
+// Wrapper component to use hook for each mosque
+const MosqueCardWithPrayer: React.FC<{ mosque: Mosque; currentTime: Date }> = ({ mosque, currentTime }) => {
+  const nextPrayer = useNextPrayer(mosque.iqamahTimes, currentTime);
+  
+  return (
+    <MosqueCard
+      mosque={mosque}
+      nextPrayer={prayerLabels[nextPrayer.prayer]}
+      nextTime={nextPrayer.time}
+    />
+  );
+};
 
 const Index: React.FC = () => {
   const nearestMosque = mockMosques[0];
@@ -72,11 +94,10 @@ const Index: React.FC = () => {
             </div>
             <div className="space-y-3">
               {mockMosques.slice(0, 3).map((mosque) => (
-                <MosqueCard
+                <MosqueCardWithPrayer
                   key={mosque.id}
                   mosque={mosque}
-                  nextPrayer="Asr"
-                  nextTime={mosque.iqamahTimes.asr}
+                  currentTime={currentTime}
                 />
               ))}
             </div>
