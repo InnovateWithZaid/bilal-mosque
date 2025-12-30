@@ -7,18 +7,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 const recentLocations = [
-  { id: '1', name: 'Mumbai, Maharashtra', subtext: 'Current location' },
-  { id: '2', name: 'Thane, Maharashtra', subtext: 'Last visited' },
-  { id: '3', name: 'Navi Mumbai', subtext: '2 days ago' },
+  { id: '1', name: 'Bangalore, Karnataka', subtext: 'Current location' },
+  { id: '2', name: 'Indiranagar, Bangalore', subtext: 'Last visited' },
+  { id: '3', name: 'Koramangala, Bangalore', subtext: '2 days ago' },
 ];
 
 const popularAreas = [
-  'Bandra',
-  'Andheri',
-  'Kurla',
-  'Dadar',
-  'Malad',
-  'Goregaon',
+  'Indiranagar',
+  'Koramangala',
+  'Shivajinagar',
+  'Jayanagar',
+  'Whitefield',
+  'HSR Layout',
 ];
 
 const LocationPage: React.FC = () => {

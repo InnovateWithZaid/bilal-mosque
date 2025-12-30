@@ -32,7 +32,7 @@ export const NextJamaahCard: React.FC<NextJamaahCardProps> = ({
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-medium text-primary uppercase tracking-wider mb-1">
-                Next Jama'ah
+                Upcoming Jama'ah (Preview)
               </p>
               <h3 className="text-2xl font-bold text-foreground">
                 {prayerLabels[prayer]}

@@ -21,6 +21,9 @@ const Index: React.FC = () => {
               <p className="text-xs text-muted-foreground font-arabic">
                 Find your next jama'ah
               </p>
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+                Preview version · Bangalore demo data only
+              </p>
             </div>
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-lg font-arabic text-primary">ب</span>
@@ -30,7 +33,7 @@ const Index: React.FC = () => {
 
         {/* Location Selector */}
         <LocationHeader 
-          location="Mumbai, Maharashtra" 
+          location="Bangalore, Karnataka" 
           subtext="Tap to change location"
         />
 
@@ -43,6 +46,9 @@ const Index: React.FC = () => {
               prayer="asr"
               countdown="12 minutes"
             />
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              Please confirm timings with the local mosque.
+            </p>
           </section>
 
           {/* Nearby Mosques */}

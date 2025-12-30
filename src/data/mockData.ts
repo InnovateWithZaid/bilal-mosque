@@ -4,9 +4,9 @@ export const mockMosques: Mosque[] = [
   {
     id: '1',
     name: 'Masjid Al-Noor',
-    address: '123 Islamic Center Drive, Mumbai',
-    lat: 19.0760,
-    lng: 72.8777,
+    address: 'Shivajinagar, Bangalore',
+    lat: 12.9850,
+    lng: 77.6050,
     type: 'mosque',
     iqamahTimes: {
       fajr: '5:30 AM',
@@ -24,9 +24,9 @@ export const mockMosques: Mosque[] = [
   {
     id: '2',
     name: 'Jama Masjid',
-    address: '456 Mosque Street, Mumbai',
-    lat: 19.0820,
-    lng: 72.8850,
+    address: 'Commercial Street, Bangalore',
+    lat: 12.9800,
+    lng: 77.6100,
     type: 'mosque',
     iqamahTimes: {
       fajr: '5:25 AM',
@@ -44,9 +44,9 @@ export const mockMosques: Mosque[] = [
   {
     id: '3',
     name: 'Musallah Al-Huda',
-    address: '789 Community Center, Mumbai',
-    lat: 19.0700,
-    lng: 72.8700,
+    address: 'Indiranagar, Bangalore',
+    lat: 12.9716,
+    lng: 77.6412,
     type: 'musallah',
     iqamahTimes: {
       fajr: '5:35 AM',
@@ -64,9 +64,9 @@ export const mockMosques: Mosque[] = [
   {
     id: '4',
     name: 'Masjid Rahmat',
-    address: '321 Peace Road, Mumbai',
-    lat: 19.0850,
-    lng: 72.8900,
+    address: 'Koramangala, Bangalore',
+    lat: 12.9352,
+    lng: 77.6245,
     type: 'mosque',
     iqamahTimes: {
       fajr: '5:20 AM',

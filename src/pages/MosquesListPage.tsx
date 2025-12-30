@@ -34,7 +34,7 @@ const MosquesListPage: React.FC = () => {
         </header>
 
         <LocationHeader 
-          location="Mumbai, Maharashtra" 
+          location="Bangalore, Karnataka" 
           subtext="3 km radius"
         />
 
