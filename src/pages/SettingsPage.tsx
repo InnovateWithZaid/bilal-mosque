@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { 
   Heart, Bell, Info, HelpCircle, 
-  LogIn, ChevronRight, Shield, Moon
+  LogIn, ChevronRight, Shield, Moon, Building2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -15,9 +15,16 @@ const settingsGroups = [
     title: 'Account',
     items: [
       { 
+        icon: Building2, 
+        label: 'Mosque Admin', 
+        description: 'Manage your mosque\'s times',
+        path: '/mosque-admin/login',
+        chevron: true
+      },
+      { 
         icon: LogIn, 
-        label: 'Admin Login', 
-        description: 'For mosque admins only',
+        label: 'Core Admin', 
+        description: 'For app administrators',
         path: '/admin/login',
         chevron: true
       },
