@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from 'lucide-react';
+
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { LocationHeader } from '@/components/LocationHeader';
 import { NextJamaahCard } from '@/components/NextJamaahCard';
@@ -49,12 +49,7 @@ const Index: React.FC = () => {
             <LocationHeader 
               location="Bangalore, Karnataka" 
             />
-            <div className="flex items-center gap-2">
-              <NotificationsSheet />
-              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                <User size={18} className="text-primary" />
-              </div>
-            </div>
+            <NotificationsSheet />
           </div>
         </header>
 
