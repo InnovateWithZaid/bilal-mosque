@@ -1,29 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Bell, Heart } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { AnnouncementCard } from '@/components/AnnouncementCard';
 import { Button } from '@/components/ui/button';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { mockAnnouncements, mockMosques } from '@/data/mockData';
-import { AnnouncementType } from '@/types';
 import { Link } from 'react-router-dom';
-
-const filterOptions: { label: string; value: AnnouncementType | 'all' }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Talks', value: 'talk' },
-  { label: 'Salah', value: 'salah_update' },
-  { label: 'Janazah', value: 'janazah' },
-  { label: 'Notices', value: 'notice' },
-];
 
 export const NotificationsSheet: React.FC = () => {
   const { favorites } = useFavorites();
-  const [filter, setFilter] = useState<AnnouncementType | 'all'>('all');
 
   // Get announcements from favorited mosques only
   const favoriteAnnouncements = mockAnnouncements
     .filter(a => favorites.includes(a.mosqueId))
-    .filter(a => filter === 'all' || a.type === filter)
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   // Get mosque name for each announcement
@@ -50,25 +39,6 @@ export const NotificationsSheet: React.FC = () => {
         <SheetHeader className="px-4 pt-4 pb-3 border-b border-border">
           <SheetTitle className="text-lg font-semibold text-foreground">Notifications</SheetTitle>
         </SheetHeader>
-
-        {/* Filter Chips */}
-        <div className="px-4 py-3 border-b border-border">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {filterOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setFilter(option.value)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                  filter === option.value
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4">
