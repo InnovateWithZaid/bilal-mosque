@@ -119,39 +119,73 @@ const userLocationIcon = L.divIcon({
 
 type FilterType = 'All' | 'Nearby' | 'Jummah' | 'Open Now' | 'Mosque' | 'Musallah' | 'Eidgah';
 
-// Map event handler component
+// Map event handler component - uses refs to prevent infinite loops
 const MapEventHandler: React.FC<{
   onBoundsChange: (bounds: L.LatLngBounds, zoom: number) => void;
 }> = ({ onBoundsChange }) => {
   const map = useMap();
+  const callbackRef = useRef(onBoundsChange);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const initializedRef = useRef(false);
+  
+  // Keep callback ref updated
+  callbackRef.current = onBoundsChange;
   
   useEffect(() => {
     const handleMove = () => {
-      onBoundsChange(map.getBounds(), map.getZoom());
+      // Debounce updates to prevent rapid state changes
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        callbackRef.current(map.getBounds(), map.getZoom());
+      }, 100);
     };
     
     map.on('moveend', handleMove);
     map.on('zoomend', handleMove);
-    handleMove(); // Initial call
+    
+    // Initial call only once
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      callbackRef.current(map.getBounds(), map.getZoom());
+    }
     
     return () => {
       map.off('moveend', handleMove);
       map.off('zoomend', handleMove);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
-  }, [map, onBoundsChange]);
+  }, [map]);
   
   return null;
 };
 
-// Fly to location component
-const FlyToLocation: React.FC<{ position: [number, number] | null; zoom?: number }> = ({ position, zoom = 14 }) => {
+// Fly to location component - clears position after flying
+const FlyToLocation: React.FC<{ 
+  position: [number, number] | null; 
+  zoom?: number;
+  onComplete?: () => void;
+}> = ({ position, zoom = 14, onComplete }) => {
   const map = useMap();
+  const lastPositionRef = useRef<string | null>(null);
   
   useEffect(() => {
     if (position) {
-      map.flyTo(position, zoom, { duration: 1.5 });
+      const posKey = `${position[0]},${position[1]}`;
+      // Only fly if position changed
+      if (lastPositionRef.current !== posKey) {
+        lastPositionRef.current = posKey;
+        map.flyTo(position, zoom, { duration: 1.5 });
+        // Clear after animation
+        if (onComplete) {
+          setTimeout(onComplete, 1600);
+        }
+      }
     }
-  }, [map, position, zoom]);
+  }, [map, position, zoom, onComplete]);
   
   return null;
 };
@@ -327,6 +361,11 @@ export const MapView: React.FC = () => {
     setRouteCoords(null);
   }, []);
 
+  // Clear fly position after animation completes
+  const clearFlyToPosition = useCallback(() => {
+    setFlyToPosition(null);
+  }, []);
+
   const filters: FilterType[] = ['All', 'Nearby', 'Jummah', 'Open Now', 'Mosque', 'Musallah', 'Eidgah'];
 
   return (
@@ -345,7 +384,7 @@ export const MapView: React.FC = () => {
         />
         
         <MapEventHandler onBoundsChange={handleBoundsChange} />
-        <FlyToLocation position={flyToPosition} />
+        <FlyToLocation position={flyToPosition} onComplete={clearFlyToPosition} />
         
         {/* User location marker */}
         {userLocation && (
