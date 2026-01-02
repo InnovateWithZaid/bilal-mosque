@@ -369,7 +369,7 @@ export const MapView: React.FC = () => {
   const filters: FilterType[] = ['All', 'Nearby', 'Jummah', 'Open Now', 'Mosque', 'Musallah', 'Eidgah'];
 
   return (
-    <div className="relative w-full h-full min-h-[calc(100vh-8rem)] overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-4rem)] overflow-hidden">
       {/* Leaflet Map */}
       <MapContainer
         center={defaultCenter}
@@ -531,24 +531,26 @@ export const MapView: React.FC = () => {
         </div>
       )}
 
-      {/* Quick filter chips */}
-      <div className="absolute bottom-28 left-4 right-4 z-[1000] flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {filters.map((filter, index) => (
-          <Badge 
-            key={filter}
-            variant={activeFilter === filter ? "default" : "secondary"}
-            className={cn(
-              "px-4 py-2 rounded-xl cursor-pointer transition-all duration-300 whitespace-nowrap",
-              "hover:scale-105 hover:shadow-md",
-              activeFilter === filter 
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
-                : "bg-card/90 backdrop-blur-sm border border-border/50 hover:bg-primary/10 hover:border-primary/30"
-            )}
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </Badge>
-        ))}
+      {/* Quick filter chips - positioned above bottom nav */}
+      <div className="absolute bottom-4 left-0 right-0 z-[1000] px-4">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          {filters.map((filter) => (
+            <Badge 
+              key={filter}
+              variant={activeFilter === filter ? "default" : "secondary"}
+              className={cn(
+                "px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-300 whitespace-nowrap text-sm font-medium",
+                "hover:scale-105 hover:shadow-md",
+                activeFilter === filter 
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
+                  : "bg-card text-foreground border border-border shadow-md hover:bg-primary/10 hover:border-primary/30"
+              )}
+              onClick={() => setActiveFilter(filter)}
+            >
+              {filter}
+            </Badge>
+          ))}
+        </div>
       </div>
 
       {/* Bottom Sheet for Selected Mosque */}
