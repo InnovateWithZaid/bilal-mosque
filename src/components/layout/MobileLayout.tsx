@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, Map, Settings, Building2 } from 'lucide-react';
+import { Home, Map, Settings, Building2, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileLayoutProps {
@@ -11,6 +11,7 @@ interface MobileLayoutProps {
 const navItems = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/map', icon: Map, label: 'Map' },
+  { path: '/favorites', icon: Heart, label: 'Favorites' },
   { path: '/mosques', icon: Building2, label: 'Mosques' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
