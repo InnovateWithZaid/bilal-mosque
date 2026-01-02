@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockMosques } from '@/data/mockData';
+import { useMosqueData } from '@/contexts/MosqueDataContext';
 import { useToast } from '@/hooks/use-toast';
 import { PrayerName, AnnouncementType } from '@/types';
 
@@ -23,7 +23,8 @@ const prayers: { key: PrayerName; label: string }[] = [
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const mosque = mockMosques[0]; // Demo mosque
+  const { mosques } = useMosqueData();
+  const mosque = mosques[0]; // Demo mosque
 
   const [iqamahTimes, setIqamahTimes] = useState(mosque.iqamahTimes);
   const [jummahTimes, setJummahTimes] = useState(mosque.jummahTimes);
@@ -56,6 +57,14 @@ const AdminDashboard: React.FC = () => {
     setNewAnnouncement({ type: 'notice', title: '', description: '' });
   };
 
+  if (!mosque) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">No mosques found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background safe-top pb-8">
       {/* Header */}
@@ -75,6 +84,20 @@ const AdminDashboard: React.FC = () => {
       </header>
 
       <div className="p-4">
+        {/* Quick Actions */}
+        <Card className="mb-6">
+          <CardContent className="p-4">
+            <Button 
+              variant="outline" 
+              className="w-full gap-2"
+              onClick={() => navigate('/admin/mosques')}
+            >
+              <Building2 size={18} />
+              Manage All Mosques
+            </Button>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="times" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="times" className="gap-1.5 text-xs">
