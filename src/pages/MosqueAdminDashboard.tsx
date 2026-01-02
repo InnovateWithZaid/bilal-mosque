@@ -37,6 +37,7 @@ const MosqueAdminDashboard: React.FC = () => {
     isha: '',
   };
 
+  const [athanTimes, setAthanTimes] = useState<PrayerTimes>(mosque?.athanTimes || defaultPrayerTimes);
   const [iqamahTimes, setIqamahTimes] = useState<PrayerTimes>(mosque?.iqamahTimes || defaultPrayerTimes);
   const [jummahTimes, setJummahTimes] = useState(mosque?.jummahTimes || []);
   const [newAnnouncement, setNewAnnouncement] = useState({
@@ -52,7 +53,7 @@ const MosqueAdminDashboard: React.FC = () => {
 
   const handleSaveTimes = () => {
     if (mosque) {
-      updateMosque(mosque.id, { iqamahTimes, jummahTimes });
+      updateMosque(mosque.id, { athanTimes, iqamahTimes, jummahTimes });
       toast({
         title: "Times Saved",
         description: "Prayer times have been updated successfully",
@@ -121,6 +122,28 @@ const MosqueAdminDashboard: React.FC = () => {
           </TabsList>
 
           <TabsContent value="times" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Clock size={18} />
+                  Athan Times
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {prayers.map((prayer) => (
+                  <div key={prayer.key} className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium w-20">{prayer.label}</span>
+                    <Input
+                      type="time"
+                      value={athanTimes[prayer.key] || ''}
+                      onChange={(e) => setAthanTimes({ ...athanTimes, [prayer.key]: e.target.value })}
+                      className="w-32 bg-muted border-0 text-center"
+                    />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
