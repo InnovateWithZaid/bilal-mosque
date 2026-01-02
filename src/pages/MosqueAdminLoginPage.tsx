@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Lock, LogIn, Building2 } from 'lucide-react';
+import { ArrowLeft, Lock, LogIn } from 'lucide-react';
+import MosqueIcon from '@/components/icons/MosqueIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -84,8 +85,8 @@ const MosqueAdminLoginPage: React.FC = () => {
 
       <div className="px-6 pt-8 pb-4">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 rounded-2xl bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-            <Building2 size={36} className="text-secondary-foreground" />
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <MosqueIcon size={36} className="text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Mosque Admin</h1>
           <p className="text-sm text-muted-foreground mt-2">

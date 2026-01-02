@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus, Building2, LogOut } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus, LogOut } from 'lucide-react';
+import MosqueIcon from '@/components/icons/MosqueIcon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -99,7 +100,7 @@ const AdminDashboard: React.FC = () => {
               className="w-full gap-2"
               onClick={() => navigate('/admin/mosques')}
             >
-              <Building2 size={18} />
+              <MosqueIcon size={18} />
               Manage All Mosques
             </Button>
           </CardContent>
