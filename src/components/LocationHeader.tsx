@@ -11,19 +11,21 @@ export const LocationHeader: React.FC<LocationHeaderProps> = ({ location, subtex
   return (
     <Link 
       to="/location"
-      className="flex items-center gap-2 mx-4 px-3 py-2.5 bg-card hover:bg-muted/30 transition-colors rounded-xl border border-border/50 shadow-sm active:scale-[0.99]"
+      className="flex items-center gap-4 mx-4 px-5 py-4 bg-card hover:bg-muted/30 transition-all duration-200 rounded-2xl border border-border/50 shadow-sm active:scale-[0.98]"
     >
-      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-        <MapPin size={16} className="text-primary" />
+      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <MapPin size={22} className="text-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Your Location</p>
-        <div className="flex items-center gap-1">
-          <span className="text-sm font-semibold text-foreground truncate">
+        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-0.5">Your Location</p>
+        <div className="flex items-center gap-2">
+          <span className="text-base font-semibold text-foreground truncate">
             {location}
           </span>
-          <ChevronDown size={14} className="text-muted-foreground flex-shrink-0" />
         </div>
+      </div>
+      <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center flex-shrink-0">
+        <ChevronDown size={16} className="text-muted-foreground" />
       </div>
     </Link>
   );
