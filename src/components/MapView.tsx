@@ -24,7 +24,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-// Custom mosque marker icon
+// Custom mosque marker icon with minarets
 const createMosqueIcon = (isSelected: boolean, type: string) => {
   const color = isSelected ? '#16a34a' : type === 'eidgah' ? '#eab308' : type === 'musallah' ? '#8b5cf6' : '#0d9488';
   const size = isSelected ? 44 : 36;
@@ -46,11 +46,28 @@ const createMosqueIcon = (isSelected: boolean, type: string) => {
         ${isSelected ? 'transform: scale(1.1);' : ''}
       ">
         <svg width="${isSelected ? 22 : 18}" height="${isSelected ? 22 : 18}" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 21h18"/>
-          <path d="M9 21v-4a3 3 0 0 1 6 0v4"/>
-          <path d="M12 7c1.66 0 3-1.34 3-3V2h-6v2c0 1.66 1.34 3 3 3z"/>
-          <path d="M12 7v2"/>
-          <path d="M5 21V9.7c0-.27.11-.52.3-.71l6-6a1 1 0 0 1 1.4 0l6 6c.19.19.3.44.3.71V21"/>
+          <!-- Left minaret -->
+          <rect x="2" y="10" width="3" height="12" rx="0.5" />
+          <path d="M3.5 10 L3.5 8 L3.5 7" />
+          <circle cx="3.5" cy="6.5" r="0.8" fill="white" />
+          
+          <!-- Right minaret -->
+          <rect x="19" y="10" width="3" height="12" rx="0.5" />
+          <path d="M20.5 10 L20.5 8 L20.5 7" />
+          <circle cx="20.5" cy="6.5" r="0.8" fill="white" />
+          
+          <!-- Main dome -->
+          <path d="M7 22 L7 14 Q12 6 17 14 L17 22" />
+          
+          <!-- Dome crescent -->
+          <path d="M12 8 L12 6" />
+          <circle cx="12" cy="5" r="1" fill="white" />
+          
+          <!-- Door -->
+          <path d="M10 22 L10 18 Q12 16 14 18 L14 22" />
+          
+          <!-- Base -->
+          <line x1="1" y1="22" x2="23" y2="22" />
         </svg>
       </div>
     `,
@@ -59,7 +76,7 @@ const createMosqueIcon = (isSelected: boolean, type: string) => {
   });
 };
 
-// Cluster icon
+// Cluster icon with mosque silhouette
 const createClusterIcon = (count: number) => {
   const size = Math.min(60, 40 + count * 2);
   return L.divIcon({
@@ -75,11 +92,19 @@ const createClusterIcon = (count: number) => {
         justify-content: center;
         box-shadow: 0 4px 16px rgba(13, 148, 136, 0.4);
         border: 3px solid white;
-        font-weight: 700;
-        font-size: ${size > 50 ? 16 : 14}px;
-        color: white;
+        position: relative;
       ">
-        ${count}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3; position: absolute;">
+          <path d="M7 22 L7 14 Q12 6 17 14 L17 22" />
+          <line x1="1" y1="22" x2="23" y2="22" />
+        </svg>
+        <span style="
+          font-weight: 700;
+          font-size: ${size > 50 ? 16 : 14}px;
+          color: white;
+          position: relative;
+          z-index: 1;
+        ">${count}</span>
       </div>
     `,
     iconSize: [size, size],
