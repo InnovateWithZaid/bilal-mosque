@@ -28,9 +28,9 @@ const settingsGroups = [
     items: [
       { 
         icon: Heart, 
-        label: 'Followed Mosques', 
-        description: 'Manage your followed mosques',
-        path: '/settings/followed',
+        label: 'Favorite Mosques', 
+        description: 'Manage your favorite mosques',
+        path: '/favorites',
         chevron: true
       },
       { 

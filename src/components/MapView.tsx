@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Building2, Navigation, Clock, ChevronRight, MapPin, Sparkles, Star, Loader2, Filter, X, Route } from 'lucide-react';
+import { Building2, Navigation, Clock, ChevronRight, MapPin, Sparkles, Star, Loader2, Filter, X, Route, Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,8 @@ import { mockMosques } from '@/data/mockData';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Supercluster from 'supercluster';
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useToast } from '@/hooks/use-toast';
 
 // Fix Leaflet default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -200,6 +202,8 @@ export const MapView: React.FC = () => {
   const [flyToPosition, setFlyToPosition] = useState<[number, number] | null>(null);
   const [routeCoords, setRouteCoords] = useState<[number, number][] | null>(null);
   const [isLoadingRoute, setIsLoadingRoute] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { toast } = useToast();
   
   // Bangalore center coordinates
   const defaultCenter: [number, number] = [12.9716, 77.5946];
@@ -564,7 +568,7 @@ export const MapView: React.FC = () => {
       >
         {selectedMosque && (
           <div className="space-y-4 animate-fade-in">
-            {/* Header with rating */}
+            {/* Header with rating and favorite */}
             <div className="flex items-start gap-3">
               <div className={cn(
                 "p-3 rounded-2xl shadow-lg",
@@ -594,6 +598,30 @@ export const MapView: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 rounded-full bg-muted hover:bg-primary/10"
+                onClick={() => {
+                  toggleFavorite(selectedMosque.id);
+                  toast({
+                    title: isFavorite(selectedMosque.id) ? "Removed from favorites" : "Added to favorites",
+                    description: isFavorite(selectedMosque.id) 
+                      ? `${selectedMosque.name} removed from your favorites`
+                      : `${selectedMosque.name} added to your favorites`,
+                  });
+                }}
+              >
+                <Heart 
+                  size={18} 
+                  className={cn(
+                    "transition-all duration-200",
+                    isFavorite(selectedMosque.id) 
+                      ? "fill-primary text-primary scale-110" 
+                      : "text-muted-foreground hover:text-primary"
+                  )} 
+                />
+              </Button>
             </div>
 
             {/* Tags */}

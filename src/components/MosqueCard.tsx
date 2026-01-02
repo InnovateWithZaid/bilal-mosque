@@ -1,9 +1,12 @@
 import React from 'react';
-import { MapPin, Clock, ChevronRight } from 'lucide-react';
+import { MapPin, Clock, ChevronRight, Heart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Mosque } from '@/types';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface MosqueCardProps {
   mosque: Mosque;
@@ -37,11 +40,44 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
 }) => {
   const { features } = mosque;
   const isUrgent = minutesUntil !== undefined && minutesUntil <= 5 && minutesUntil >= 0;
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { toast } = useToast();
+  const favorited = isFavorite(mosque.id);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(mosque.id);
+    toast({
+      title: favorited ? "Removed from favorites" : "Added to favorites",
+      description: favorited 
+        ? `${mosque.name} removed from your favorites`
+        : `${mosque.name} added to your favorites`,
+    });
+  };
 
   return (
     <Link to={`/mosque/${mosque.id}`}>
-      <div className="bg-card rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden animate-fade-in border border-border/50">
-        <div className="p-4">
+      <div className="bg-card rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden animate-fade-in border border-border/50 relative">
+        {/* Favorite Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+          onClick={handleFavoriteClick}
+        >
+          <Heart 
+            size={16} 
+            className={cn(
+              "transition-all duration-200",
+              favorited 
+                ? "fill-primary text-primary scale-110" 
+                : "text-muted-foreground hover:text-primary"
+            )} 
+          />
+        </Button>
+
+        <div className="p-4 pr-12">
           <div className="flex items-start gap-3">
             {/* Icon */}
             <div className={cn(
@@ -67,7 +103,6 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                     <p className="text-xs">{mosque.distance} km away</p>
                   </div>
                 </div>
-                <ChevronRight size={18} className="text-muted-foreground/50 flex-shrink-0 mt-0.5" />
               </div>
 
               {/* Tags */}

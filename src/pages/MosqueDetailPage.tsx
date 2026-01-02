@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Navigation, Heart, Flag, Clock, Calendar, Bell, Users, ExternalLink, Car, Droplets, Accessibility, Baby, UtensilsCrossed } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { mockMosques, mockAnnouncements } from '@/data/mockData';
 import { AnnouncementCard } from '@/components/AnnouncementCard';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useFavorites } from '@/contexts/FavoritesContext';
 
 const getPlaceTypeIcon = (type: string) => {
   switch (type) {
@@ -40,7 +41,7 @@ const MosqueDetailPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isFollowing, setIsFollowing] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const mosque = mockMosques.find((m) => m.id === id);
   const announcements = mockAnnouncements.filter((a) => a.mosqueId === id).slice(0, 2);
@@ -54,14 +55,15 @@ const MosqueDetailPage: React.FC = () => {
   }
 
   const { features, facilities } = mosque;
+  const isFollowing = isFavorite(mosque.id);
 
   const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+    toggleFavorite(mosque.id);
     toast({
-      title: isFollowing ? "Unfollowed" : "Following",
+      title: isFollowing ? "Removed from favorites" : "Added to favorites",
       description: isFollowing 
-        ? `You'll no longer receive updates from ${mosque.name}`
-        : `You'll receive updates from ${mosque.name}`,
+        ? `${mosque.name} removed from your favorites`
+        : `${mosque.name} added to your favorites`,
     });
   };
 
