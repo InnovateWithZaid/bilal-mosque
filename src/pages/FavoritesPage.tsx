@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
-import { LocationHeader } from '@/components/LocationHeader';
+
 import { MosqueCard } from '@/components/MosqueCard';
 import { PullToRefresh } from '@/components/PullToRefresh';
 import { Input } from '@/components/ui/input';
@@ -62,7 +62,6 @@ const FavoritesPage: React.FC = () => {
     <MobileLayout>
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="safe-top pb-8 bg-surface min-h-screen">
-          <LocationHeader location="Bangalore, Karnataka" />
 
           {/* Header */}
           <header className="px-4 pt-2 pb-4">
