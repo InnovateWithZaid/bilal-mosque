@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { MosqueDataProvider } from "@/contexts/MosqueDataContext";
+import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import Index from "./pages/Index";
 import LocationPage from "./pages/LocationPage";
 import MapPage from "./pages/MapPage";
@@ -27,28 +29,30 @@ const App = () => (
     <TooltipProvider>
       <MosqueDataProvider>
         <FavoritesProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/location" element={<LocationPage />} />
-              <Route path="/map" element={<MapPage />} />
-              <Route path="/mosques" element={<MosquesListPage />} />
-              <Route path="/mosque/:id" element={<MosqueDetailPage />} />
-              <Route path="/mosque/:id/community" element={<CommunityPage />} />
-              <Route path="/mosque/:id/report" element={<ReportPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/mosques" element={<AdminMosquesPage />} />
-              <Route path="/admin/mosques/add" element={<AdminMosqueFormPage />} />
-              <Route path="/admin/mosques/edit/:id" element={<AdminMosqueFormPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <AdminAuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/location" element={<LocationPage />} />
+                <Route path="/map" element={<MapPage />} />
+                <Route path="/mosques" element={<MosquesListPage />} />
+                <Route path="/mosque/:id" element={<MosqueDetailPage />} />
+                <Route path="/mosque/:id/community" element={<CommunityPage />} />
+                <Route path="/mosque/:id/report" element={<ReportPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/admin/login" element={<AdminLoginPage />} />
+                <Route path="/admin/dashboard" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques" element={<AdminProtectedRoute><AdminMosquesPage /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques/add" element={<AdminProtectedRoute><AdminMosqueFormPage /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques/edit/:id" element={<AdminProtectedRoute><AdminMosqueFormPage /></AdminProtectedRoute>} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </AdminAuthProvider>
         </FavoritesProvider>
       </MosqueDataProvider>
     </TooltipProvider>

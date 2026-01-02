@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus, Building2 } from 'lucide-react';
+import { ArrowLeft, Clock, Calendar, Bell, Flag, Save, Plus, Building2, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useMosqueData } from '@/contexts/MosqueDataContext';
 import { useToast } from '@/hooks/use-toast';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { PrayerName, AnnouncementType } from '@/types';
 
 const prayers: { key: PrayerName; label: string }[] = [
@@ -23,8 +24,14 @@ const prayers: { key: PrayerName; label: string }[] = [
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { logout } = useAdminAuth();
   const { mosques } = useMosqueData();
   const mosque = mosques[0]; // Demo mosque
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin/login');
+  };
 
   const [iqamahTimes, setIqamahTimes] = useState(mosque.iqamahTimes);
   const [jummahTimes, setJummahTimes] = useState(mosque.jummahTimes);
@@ -77,9 +84,9 @@ const AdminDashboard: React.FC = () => {
             <h1 className="text-lg font-semibold text-foreground">Admin Dashboard</h1>
             <p className="text-xs text-muted-foreground">{mosque.name}</p>
           </div>
-          <Badge variant="secondary" className="bg-primary/20 text-primary">
-            Admin
-          </Badge>
+          <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+            <LogOut size={20} className="text-muted-foreground" />
+          </Button>
         </div>
       </header>
 
