@@ -10,19 +10,7 @@ import { AnnouncementCard } from '@/components/AnnouncementCard';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useFavorites } from '@/contexts/FavoritesContext';
-
-const getPlaceTypeIcon = (type: string) => {
-  switch (type) {
-    case 'mosque':
-      return '🕌';
-    case 'musallah':
-      return '🧎';
-    case 'eidgah':
-      return '🌙';
-    default:
-      return '🕌';
-  }
-};
+import MosqueIcon from '@/components/icons/MosqueIcon';
 
 const getPlaceTypeLabel = (type: string) => {
   switch (type) {
@@ -111,11 +99,17 @@ const MosqueDetailPage: React.FC = () => {
         <section className="animate-fade-in">
           <div className="flex items-start gap-4">
             <div className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl shadow-soft",
+              "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-soft",
               mosque.type === 'mosque' ? "bg-primary/10" : 
               mosque.type === 'eidgah' ? "bg-amber-500/10" : "bg-secondary/10"
             )}>
-              {getPlaceTypeIcon(mosque.type)}
+              <MosqueIcon 
+                size={32} 
+                className={cn(
+                  mosque.type === 'mosque' ? "text-primary" : 
+                  mosque.type === 'eidgah' ? "text-amber-500" : "text-secondary-foreground"
+                )} 
+              />
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl font-bold text-foreground">{mosque.name}</h1>
@@ -124,11 +118,12 @@ const MosqueDetailPage: React.FC = () => {
                 <Badge 
                   variant={mosque.type === 'mosque' ? 'default' : 'secondary'}
                   className={cn(
-                    "rounded-full",
+                    "rounded-full gap-1.5",
                     mosque.type === 'eidgah' && "border-amber-500/30 text-amber-600 bg-amber-500/10"
                   )}
                 >
-                  {getPlaceTypeIcon(mosque.type)} {getPlaceTypeLabel(mosque.type)}
+                  <MosqueIcon size={12} />
+                  {getPlaceTypeLabel(mosque.type)}
                 </Badge>
                 {features.eidPrayer && (
                   <Badge variant="outline" className="rounded-full border-cyan/30 text-cyan bg-cyan/5">
