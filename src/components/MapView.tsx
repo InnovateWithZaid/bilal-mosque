@@ -540,10 +540,10 @@ export const MapView: React.FC = () => {
               variant={activeFilter === filter ? "default" : "secondary"}
               className={cn(
                 "px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-300 whitespace-nowrap text-sm font-medium",
-                "hover:scale-105 hover:shadow-md",
+                "hover:scale-105",
                 activeFilter === filter 
                   ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
-                  : "bg-card text-foreground border border-border shadow-md hover:bg-primary/10 hover:border-primary/30"
+                  : "bg-card text-foreground border border-border shadow-md hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/25"
               )}
               onClick={() => setActiveFilter(filter)}
             >
