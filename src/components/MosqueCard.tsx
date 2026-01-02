@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useToast } from '@/hooks/use-toast';
+import MosqueIcon from '@/components/icons/MosqueIcon';
 
 interface MosqueCardProps {
   mosque: Mosque;
@@ -88,7 +89,16 @@ export const MosqueCard: React.FC<MosqueCardProps> = ({
                 ? "bg-amber-500/10"
                 : "bg-primary/5"
             )}>
-              <span className="text-xl">🕌</span>
+              <MosqueIcon 
+                size={22} 
+                className={cn(
+                  mosque.type === 'mosque' 
+                    ? "text-primary" 
+                    : mosque.type === 'eidgah'
+                    ? "text-amber-500"
+                    : "text-primary/70"
+                )} 
+              />
             </div>
 
             {/* Content */}
