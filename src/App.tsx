@@ -20,6 +20,8 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminMosquesPage from "./pages/AdminMosquesPage";
 import AdminMosqueFormPage from "./pages/AdminMosqueFormPage";
+import MosqueAdminLoginPage from "./pages/MosqueAdminLoginPage";
+import MosqueAdminDashboard from "./pages/MosqueAdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,10 +46,12 @@ const App = () => (
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/favorites" element={<FavoritesPage />} />
                 <Route path="/admin/login" element={<AdminLoginPage />} />
-                <Route path="/admin/dashboard" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
-                <Route path="/admin/mosques" element={<AdminProtectedRoute><AdminMosquesPage /></AdminProtectedRoute>} />
-                <Route path="/admin/mosques/add" element={<AdminProtectedRoute><AdminMosqueFormPage /></AdminProtectedRoute>} />
-                <Route path="/admin/mosques/edit/:id" element={<AdminProtectedRoute><AdminMosqueFormPage /></AdminProtectedRoute>} />
+                <Route path="/admin/dashboard" element={<AdminProtectedRoute requiredRole="core_admin"><AdminDashboard /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques" element={<AdminProtectedRoute requiredRole="core_admin"><AdminMosquesPage /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques/add" element={<AdminProtectedRoute requiredRole="core_admin"><AdminMosqueFormPage /></AdminProtectedRoute>} />
+                <Route path="/admin/mosques/edit/:id" element={<AdminProtectedRoute requiredRole="core_admin"><AdminMosqueFormPage /></AdminProtectedRoute>} />
+                <Route path="/mosque-admin/login" element={<MosqueAdminLoginPage />} />
+                <Route path="/mosque-admin/dashboard" element={<AdminProtectedRoute requiredRole="mosque_admin"><MosqueAdminDashboard /></AdminProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -1,56 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Lock, LogIn } from 'lucide-react';
+import { ArrowLeft, Lock, LogIn, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { useMosqueData } from '@/contexts/MosqueDataContext';
 
-const AdminLoginPage: React.FC = () => {
+const MosqueAdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { loginCoreAdmin, isAuthenticated, role } = useAdminAuth();
+  const { loginMosqueAdmin, isAuthenticated, role } = useAdminAuth();
+  const { mosques } = useMosqueData();
+  const [selectedMosqueId, setSelectedMosqueId] = useState('');
   const [pin, setPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/admin/dashboard';
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/mosque-admin/dashboard';
 
-  // Redirect if already authenticated as core admin
-  React.useEffect(() => {
-    if (isAuthenticated && role === 'core_admin') {
+  useEffect(() => {
+    if (isAuthenticated && role === 'mosque_admin') {
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, role, navigate, from]);
 
   const handleLogin = async () => {
+    if (!selectedMosqueId) {
+      toast({
+        title: "Mosque required",
+        description: "Please select your mosque",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!pin.trim()) {
       toast({
         title: "PIN required",
-        description: "Please enter the admin PIN",
+        description: "Please enter your admin PIN",
         variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
-    
-    // Small delay for UX
     await new Promise((resolve) => setTimeout(resolve, 500));
     
-    const success = loginCoreAdmin(pin);
+    const success = loginMosqueAdmin(selectedMosqueId, pin);
     
     if (success) {
       toast({
         title: "Welcome back",
-        description: "You are now logged in as admin",
+        description: "You are now logged in as mosque admin",
       });
       navigate(from, { replace: true });
     } else {
       toast({
-        title: "Invalid PIN",
-        description: "Please check your PIN and try again",
+        title: "Invalid credentials",
+        description: "Please check your mosque selection and PIN",
         variant: "destructive",
       });
     }
@@ -66,7 +76,6 @@ const AdminLoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background safe-top">
-      {/* Header */}
       <header className="p-4">
         <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
           <ArrowLeft size={22} />
@@ -74,23 +83,36 @@ const AdminLoginPage: React.FC = () => {
       </header>
 
       <div className="px-6 pt-8 pb-4">
-        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <span className="text-4xl font-arabic text-primary">ب</span>
+          <div className="w-20 h-20 rounded-2xl bg-secondary/20 flex items-center justify-center mx-auto mb-4">
+            <Building2 size={36} className="text-secondary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Core Admin Login</h1>
+          <h1 className="text-2xl font-bold text-foreground">Mosque Admin</h1>
           <p className="text-sm text-muted-foreground mt-2">
-            For Bilal app administrators only.
-          </p>
-          <p className="text-xs text-muted-foreground/70 mt-1">
-            Full access to manage all mosques.
+            Manage your mosque's prayer times and announcements.
           </p>
         </div>
 
-        {/* Login Form */}
         <Card variant="elevated">
           <CardContent className="p-6 space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">
+                Select Your Mosque
+              </label>
+              <Select value={selectedMosqueId} onValueChange={setSelectedMosqueId}>
+                <SelectTrigger className="bg-muted border-0">
+                  <SelectValue placeholder="Choose your mosque" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mosques.filter(m => m.type === 'mosque').map((mosque) => (
+                    <SelectItem key={mosque.id} value={mosque.id}>
+                      {mosque.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
                 Admin PIN
@@ -108,6 +130,7 @@ const AdminLoginPage: React.FC = () => {
                 />
               </div>
             </div>
+
             <Button 
               variant="gold" 
               size="lg" 
@@ -126,16 +149,15 @@ const AdminLoginPage: React.FC = () => {
         </Card>
 
         <p className="text-xs text-muted-foreground text-center mt-6 leading-relaxed">
-          Core administrators have full access to manage all mosques.
-          For mosque-specific access, use the Mosque Admin login.
+          Only verified mosque administrators can access this area.
         </p>
 
         <p className="text-xs text-amber-500 text-center mt-4 leading-relaxed">
-          Demo PIN: 0000
+          Demo PIN: 1234
         </p>
       </div>
     </div>
   );
 };
 
-export default AdminLoginPage;
+export default MosqueAdminLoginPage;
