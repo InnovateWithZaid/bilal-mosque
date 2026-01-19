@@ -560,9 +560,9 @@ export const MapView: React.FC = () => {
         </div>
       )}
 
-      {/* Quick filter chips - positioned at top below location card */}
-      <div className="absolute top-24 left-0 right-0 z-[1000] px-4">
-        <div className="flex gap-2 overflow-x-auto py-2 scrollbar-hide">
+      {/* Quick filter chips - positioned below location card */}
+      <div className="absolute top-32 left-0 right-0 z-[900] px-4">
+        <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
           {filters.map((filter) => (
             <Badge 
               key={filter}
