@@ -91,13 +91,13 @@ const AdminMosquesPage: React.FC = () => {
           </Card>
           <Card>
             <CardContent className="p-3 text-center">
-              <p className="text-2xl font-bold text-secondary-foreground">{mosques.filter(m => m.type === 'musallah').length}</p>
+              <p className="text-2xl font-bold text-amber-600">{mosques.filter(m => m.type === 'musallah').length}</p>
               <p className="text-xs text-muted-foreground">Musallahs</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-3 text-center">
-              <p className="text-2xl font-bold text-accent-foreground">{mosques.filter(m => m.type === 'eidgah').length}</p>
+              <p className="text-2xl font-bold text-emerald-600">{mosques.filter(m => m.type === 'eidgah').length}</p>
               <p className="text-xs text-muted-foreground">Eidgahs</p>
             </CardContent>
           </Card>
