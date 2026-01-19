@@ -42,6 +42,7 @@ const MosqueCardWithPrayer: React.FC<{ mosque: Mosque; currentTime: Date }> = ({
 const MosquesListPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const [showFilters, setShowFilters] = useState(false);
   const { currentTime } = useBangaloreTime();
   const { toast } = useToast();
 
@@ -93,28 +94,35 @@ const MosquesListPage: React.FC = () => {
                 className="pl-10 bg-card border border-border rounded-xl shadow-soft focus:ring-2 focus:ring-primary/20"
               />
             </div>
-            <Button variant="outline" size="icon" className="rounded-xl border-border shadow-soft hover:bg-muted">
-              <SlidersHorizontal size={18} className="text-foreground" />
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className={`rounded-xl border-border shadow-soft transition-colors ${showFilters ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'hover:bg-muted'}`}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <SlidersHorizontal size={18} className={showFilters ? 'text-primary-foreground' : 'text-foreground'} />
             </Button>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {filters.map((filter) => (
-              <Badge
-                key={filter}
-                variant={activeFilter === filter ? "default" : "outline"}
-                className={`cursor-pointer whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeFilter === filter 
-                    ? 'bg-primary text-primary-foreground shadow-md' 
-                    : 'bg-card border-border text-muted-foreground hover:text-foreground hover:bg-muted'
-                }`}
-                onClick={() => setActiveFilter(filter)}
-              >
-                {filter}
-              </Badge>
-            ))}
-          </div>
+          {/* Filter Pills - Toggle visibility */}
+          {showFilters && (
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide animate-fade-in">
+              {filters.map((filter) => (
+                <Badge
+                  key={filter}
+                  variant={activeFilter === filter ? "default" : "outline"}
+                  className={`cursor-pointer whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    activeFilter === filter 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'bg-card border-border text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Mosques List */}
