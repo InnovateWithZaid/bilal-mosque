@@ -560,19 +560,19 @@ export const MapView: React.FC = () => {
         </div>
       )}
 
-      {/* Quick filter chips - positioned above bottom nav */}
-      <div className="absolute bottom-4 left-0 right-0 z-[1000] px-4">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      {/* Quick filter chips - positioned at top below location card */}
+      <div className="absolute top-24 left-0 right-0 z-[1000] px-4">
+        <div className="flex gap-2 overflow-x-auto py-2 scrollbar-hide">
           {filters.map((filter) => (
             <Badge 
               key={filter}
               variant={activeFilter === filter ? "default" : "secondary"}
               className={cn(
-                "px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-300 whitespace-nowrap text-sm font-medium",
-                "hover:scale-105",
+                "px-3 py-2 rounded-full cursor-pointer transition-all duration-300 whitespace-nowrap text-xs font-medium",
+                "hover:scale-105 shadow-md",
                 activeFilter === filter 
                   ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
-                  : "bg-card text-foreground border border-border shadow-md hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/25"
+                  : "bg-card/95 backdrop-blur-sm text-foreground border border-border/50 hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/25"
               )}
               onClick={() => setActiveFilter(filter)}
             >
