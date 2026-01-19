@@ -28,7 +28,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children, hideNav })
 
       {!hideNav && (
         <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 safe-bottom z-50 shadow-lg">
-          <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-4">
+          <div className="flex items-center justify-between h-16 max-w-lg mx-auto px-2">
             {navItems.map(({ path, icon: Icon, label }) => {
               const isActive = location.pathname === path;
               return (
@@ -36,7 +36,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = ({ children, hideNav })
                   key={path}
                   to={path}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-0.5 px-4 py-2 rounded-xl transition-all duration-200",
+                    "flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 py-2 rounded-xl transition-all duration-200",
                     isActive 
                       ? "text-primary" 
                       : "text-muted-foreground hover:text-foreground"
