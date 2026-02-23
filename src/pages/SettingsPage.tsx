@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from 'next-themes';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,10 +52,9 @@ const settingsGroups = [
       { 
         icon: Moon, 
         label: 'Dark Mode', 
-        description: 'Coming soon',
+        description: 'Switch between light and dark themes',
         toggle: true,
-        enabled: false,
-        disabled: true
+        key: 'darkMode',
       },
     ],
   },
@@ -87,6 +87,8 @@ const settingsGroups = [
 ];
 
 const SettingsPage: React.FC = () => {
+  const { resolvedTheme, setTheme } = useTheme();
+
   return (
     <MobileLayout>
       <div className="safe-top pb-8 bg-surface min-h-screen">
@@ -124,8 +126,9 @@ const SettingsPage: React.FC = () => {
                         </div>
                         {item.toggle && (
                           <Switch 
-                            checked={item.enabled} 
+                            checked={item.key === 'darkMode' ? resolvedTheme === 'dark' : item.enabled}
                             disabled={item.disabled}
+                            onCheckedChange={item.key === 'darkMode' ? (checked) => setTheme(checked ? 'dark' : 'light') : undefined}
                           />
                         )}
                         {item.chevron && (
