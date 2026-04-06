@@ -1,0 +1,135 @@
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Redirect, useRouter } from "expo-router";
+import { Lock, LogIn } from "lucide-react-native";
+
+import { AppButton } from "@/components/AppButton";
+import { AppCard } from "@/components/AppCard";
+import { AppHeader } from "@/components/AppHeader";
+import { AppScreen } from "@/components/AppScreen";
+import { LoadingState } from "@/components/LoadingState";
+import { TextField } from "@/components/TextField";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useMosqueData } from "@/contexts/MosqueDataContext";
+import { colors, radii, spacing } from "@/lib/theme";
+
+export default function MosqueAdminLoginScreen() {
+  const router = useRouter();
+  const { ready, isAuthenticated, role, loginMosqueAdmin } = useAdminAuth();
+  const { mosques } = useMosqueData();
+  const [selectedMosqueId, setSelectedMosqueId] = useState("");
+  const [pin, setPin] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  if (!ready) {
+    return <LoadingState label="Checking mosque admin session..." />;
+  }
+
+  if (isAuthenticated && role === "mosque_admin") {
+    return <Redirect href="/mosque-admin/dashboard" />;
+  }
+
+  const handleLogin = async () => {
+    if (!selectedMosqueId) {
+      Alert.alert("Select a mosque", "Please choose the mosque you manage.");
+      return;
+    }
+
+    if (!pin.trim()) {
+      Alert.alert("PIN required", "Please enter the mosque admin PIN.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const ok = await loginMosqueAdmin(selectedMosqueId, pin);
+      if (!ok) {
+        Alert.alert("Invalid credentials", "Please check the mosque selection and PIN.");
+        return;
+      }
+
+      router.replace("/mosque-admin/dashboard");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AppScreen contentContainerStyle={styles.content}>
+      <AppHeader title="Mosque admin login" subtitle="Manage one mosque from your device." showBack />
+      <AppCard style={styles.hero}>
+        <Lock color={colors.primary} size={30} />
+        <Text style={styles.heroTitle}>Select your mosque</Text>
+        <Text style={styles.heroText}>This login is still local-demo based in the Expo app.</Text>
+      </AppCard>
+      <View style={styles.list}>
+        {mosques
+          .filter((mosque) => mosque.type === "mosque")
+          .map((mosque) => (
+            <Pressable key={mosque.id} onPress={() => setSelectedMosqueId(mosque.id)}>
+              <AppCard style={[styles.selectCard, selectedMosqueId === mosque.id && styles.selectCardActive]}>
+                <Text style={styles.selectTitle}>{mosque.name}</Text>
+                <Text style={styles.selectText}>{mosque.address}</Text>
+              </AppCard>
+            </Pressable>
+          ))}
+      </View>
+      <TextField
+        label="Admin PIN"
+        value={pin}
+        onChangeText={setPin}
+        placeholder="Enter PIN"
+        secureTextEntry
+        keyboardType="number-pad"
+      />
+      <AppButton label="Login" icon={<LogIn color={colors.white} size={16} />} onPress={() => void handleLogin()} loading={loading} />
+      <Text style={styles.helper}>Demo PIN: 1234</Text>
+    </AppScreen>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: {
+    gap: spacing.md,
+  },
+  hero: {
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  heroTitle: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: colors.text,
+  },
+  heroText: {
+    fontSize: 14,
+    textAlign: "center",
+    color: colors.textMuted,
+  },
+  list: {
+    gap: spacing.sm,
+  },
+  selectCard: {
+    borderColor: colors.border,
+  },
+  selectCardActive: {
+    borderColor: colors.primary,
+    backgroundColor: "#F1FBFB",
+  },
+  selectTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: colors.text,
+  },
+  selectText: {
+    marginTop: 4,
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  helper: {
+    textAlign: "center",
+    color: colors.warning,
+    fontSize: 13,
+    fontWeight: "700",
+  },
+});

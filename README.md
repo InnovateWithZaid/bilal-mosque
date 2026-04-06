@@ -1,73 +1,58 @@
-# Welcome to your Lovable project
+# Bilal Expo App
 
-## Project info
+Bilal is now structured as a React Native app built with Expo and Expo Router.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## What Changed
 
-## How can I edit this code?
+- The repo root now boots an Expo native app instead of the previous Vite web app.
+- Main native routes live in `app/`.
+- Shared native logic lives in `native/`.
+- The old Vite/web source and build files have been removed so the repo is Expo-native only.
 
-There are several ways of editing your application.
+## Features In This Native Conversion
 
-**Use Lovable**
+- Native bottom-tab navigation with Expo Router
+- Mosque discovery screens for home, mosques, favorites, map, details, community, and issue reporting
+- Local device persistence for favorites, mosque data, reports, and admin demo sessions
+- Native map screen using `react-native-maps`
+- Android app config with package ID `com.bilalmosque.app`
+- Generated icon, adaptive icon, and splash assets in `assets/`
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Run The App
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Install dependencies:
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+npm install
 ```
 
-**Edit a file directly in GitHub**
+2. Start Expo:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run start
+```
 
-**Use GitHub Codespaces**
+3. Run on Android:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run android
+```
 
-## What technologies are used for this project?
+## Useful Commands
 
-This project is built with:
+```bash
+npm run typecheck
+npx expo config --type public
+npx expo export --platform android --output-dir .expo-export
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Current Data/Auth Behavior
 
-## How can I deploy this project?
+- Mosque data, announcements, reports, favorites, and demo admin sessions are stored locally on-device.
+- Core admin demo PIN: `0000`
+- Mosque admin demo PIN: `1234`
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Notes
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- The Expo conversion is native-first. The previous web UI is not the active runtime anymore.
+- If you add more Expo packages later, prefer `npx expo install ... --npm` on this machine.
