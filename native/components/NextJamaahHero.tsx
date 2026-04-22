@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Clock3, ChevronRight } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
 import { AppCard } from "@/components/AppCard";
-import { colors, radii, spacing } from "@/lib/theme";
+import { MosqueCover } from "@/components/MosqueCover";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 import type { Mosque, PrayerName } from "@/types";
 
 const prayerLabels: Record<PrayerName, string> = {
@@ -27,11 +27,12 @@ export function NextJamaahHero({
   const router = useRouter();
 
   return (
-    <AppCard pressable onPress={() => router.push(`/mosque/${mosque.id}`)} style={styles.card}>
-      <LinearGradient colors={["#0F9D9F", "#0A7A7C"]} style={styles.gradient}>
+    <AppCard pressable onPress={() => router.push(`/mosque/${mosque.id}`)} variant="image" padding={0}>
+      <MosqueCover uri={mosque.coverImageUri} height={276} overlay="strong">
         <View style={styles.top}>
-          <View>
-            <Text style={styles.label}>{prayerLabels[prayer]} in</Text>
+          <View style={styles.copy}>
+            <Text style={styles.label}>Next prayer</Text>
+            <Text style={styles.prayerName}>{prayerLabels[prayer]}</Text>
             <Text style={styles.countdown}>{countdown}</Text>
           </View>
           <View style={styles.clock}>
@@ -41,11 +42,11 @@ export function NextJamaahHero({
         <View style={styles.bottom}>
           <View style={styles.timeChip}>
             <Text style={styles.chipLabel}>Athan</Text>
-            <Text style={styles.chipValue}>{mosque.athanTimes[prayer] || "—"}</Text>
+            <Text style={styles.chipValue}>{mosque.athanTimes[prayer] || "--"}</Text>
           </View>
-          <View style={styles.timeChip}>
+          <View style={[styles.timeChip, styles.iqamahChip]}>
             <Text style={styles.chipLabel}>Iqamah</Text>
-            <Text style={styles.chipValue}>{mosque.iqamahTimes[prayer] || "—"}</Text>
+            <Text style={styles.chipValue}>{mosque.iqamahTimes[prayer] || "--"}</Text>
           </View>
         </View>
         <View style={styles.mosqueRow}>
@@ -54,43 +55,42 @@ export function NextJamaahHero({
           </Text>
           <ChevronRight color={colors.white} size={16} />
         </View>
-      </LinearGradient>
+      </MosqueCover>
     </AppCard>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    padding: 0,
-    overflow: "hidden",
-  },
-  gradient: {
-    borderRadius: radii.lg,
-    padding: spacing.lg,
-    gap: spacing.lg,
-  },
   top: {
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
   },
+  copy: {
+    gap: 2,
+  },
   label: {
+    fontFamily: fonts.medium,
     fontSize: 12,
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 0.8,
     color: "rgba(255,255,255,0.78)",
-    fontWeight: "700",
+  },
+  prayerName: {
+    fontFamily: fonts.semiBold,
+    fontSize: 18,
+    color: colors.white,
   },
   countdown: {
-    fontSize: 42,
-    fontWeight: "800",
+    ...typography.number,
+    fontFamily: fonts.extraBold,
+    fontSize: 44,
     color: colors.white,
-    marginTop: spacing.xs,
   },
   clock: {
     width: 38,
     height: 38,
-    borderRadius: 19,
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.14)",
@@ -101,20 +101,25 @@ const styles = StyleSheet.create({
   },
   timeChip: {
     flex: 1,
-    borderRadius: radii.md,
-    backgroundColor: "rgba(255,255,255,0.18)",
+    borderRadius: radii.lg,
+    backgroundColor: "rgba(255,255,255,0.16)",
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
   },
+  iqamahChip: {
+    backgroundColor: "rgba(200, 164, 90, 0.18)",
+  },
   chipLabel: {
+    fontFamily: fonts.medium,
     fontSize: 10,
     textTransform: "uppercase",
     color: "rgba(255,255,255,0.72)",
     marginBottom: 4,
   },
   chipValue: {
+    ...typography.number,
+    fontFamily: fonts.bold,
     fontSize: 17,
-    fontWeight: "700",
     color: colors.white,
   },
   mosqueRow: {
@@ -125,8 +130,8 @@ const styles = StyleSheet.create({
   mosqueName: {
     flex: 1,
     marginRight: spacing.sm,
+    fontFamily: fonts.semiBold,
     fontSize: 16,
-    fontWeight: "700",
     color: colors.white,
   },
 });

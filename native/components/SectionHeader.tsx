@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 type SectionHeaderProps = {
   title: string;
@@ -29,13 +29,11 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title2,
   },
   action: {
+    fontFamily: fonts.semiBold,
     fontSize: 13,
-    fontWeight: "700",
-    color: colors.primary,
+    color: colors.primaryDark,
   },
 });

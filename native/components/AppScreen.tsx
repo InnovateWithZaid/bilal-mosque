@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View, type ScrollViewProps, type ViewProps } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { colors, screen } from "@/lib/theme";
+import { colors, screen, spacing } from "@/lib/theme";
 
 type AppScreenProps = {
   scroll?: boolean;
@@ -18,26 +18,41 @@ export function AppScreen({
   refreshControl,
   style,
 }: AppScreenProps) {
-  const staticContentStyle = padded ? styles.screenContent : styles.screenContentUnpadded;
-  const scrollContentStyle = padded ? styles.scrollContent : styles.scrollContentUnpadded;
+  const insets = useSafeAreaInsets();
+  const contentPadding = padded
+    ? {
+        paddingHorizontal: screen.paddingHorizontal,
+        paddingTop: spacing.sm,
+        paddingBottom: spacing.xxl + insets.bottom,
+      }
+    : {
+        paddingBottom: spacing.xl + insets.bottom,
+      };
 
   if (!scroll) {
     return (
-      <SafeAreaView edges={["top"]} style={styles.safeArea}>
-        <View style={[staticContentStyle, style]}>{children}</View>
+      <SafeAreaView edges={["top", "left", "right"]} style={styles.safeArea}>
+        <View pointerEvents="none" style={styles.glowTop} />
+        <View pointerEvents="none" style={styles.glowRight} />
+        <View style={[styles.staticContent, contentPadding]}>
+          <View style={[styles.frame, style]}>{children}</View>
+        </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView edges={["top"]} style={styles.safeArea}>
+    <SafeAreaView edges={["top", "left", "right"]} style={styles.safeArea}>
+      <View pointerEvents="none" style={styles.glowTop} />
+      <View pointerEvents="none" style={styles.glowRight} />
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[scrollContentStyle, contentContainerStyle]}
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={[styles.scrollContent, contentPadding, contentContainerStyle]}
         refreshControl={refreshControl}
         showsVerticalScrollIndicator={false}
       >
-        <View style={style}>{children}</View>
+        <View style={[styles.frame, style]}>{children}</View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -48,24 +63,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  glowTop: {
+    position: "absolute",
+    top: -40,
+    left: -10,
+    width: 220,
+    height: 220,
+    borderRadius: 220,
+    backgroundColor: "rgba(58, 174, 216, 0.08)",
+  },
+  glowRight: {
+    position: "absolute",
+    top: 100,
+    right: -60,
+    width: 220,
+    height: 220,
+    borderRadius: 220,
+    backgroundColor: "rgba(200, 164, 90, 0.08)",
+  },
   scroll: {
     flex: 1,
   },
-  screenContent: {
-    flex: 1,
-    paddingHorizontal: screen.paddingHorizontal,
-    paddingBottom: 32,
-  },
-  screenContentUnpadded: {
+  staticContent: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: screen.paddingHorizontal,
-    paddingBottom: 32,
   },
-  scrollContentUnpadded: {
-    flexGrow: 1,
-    paddingBottom: 0,
+  frame: {
+    width: "100%",
+    maxWidth: screen.maxWidth,
+    alignSelf: "center",
   },
 });

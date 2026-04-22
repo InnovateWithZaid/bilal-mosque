@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AppCard } from "@/components/AppCard";
 import { AppHeader } from "@/components/AppHeader";
 import { AppScreen } from "@/components/AppScreen";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 
 const recentLocations = [
   { id: "1", name: "Bangalore, Karnataka", subtext: "Current location" },
@@ -22,10 +22,10 @@ export default function LocationScreen() {
     <AppScreen contentContainerStyle={styles.content}>
       <AppHeader title="Select location" subtitle="Location selection is currently stored in-app only." showBack />
 
-      <AppCard pressable onPress={() => Alert.alert("Current location", "Live location selection can be wired into search next.")}>
+      <AppCard variant="glass" pressable onPress={() => Alert.alert("Current location", "Live location selection can be wired into search next.")}>
         <View style={styles.actionRow}>
           <View style={styles.iconWrap}>
-            <Navigation color={colors.primary} size={20} />
+            <Navigation color={colors.primaryDark} size={20} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.cardTitle}>Use current location</Text>
@@ -40,14 +40,14 @@ export default function LocationScreen() {
           <Text style={styles.sectionTitle}>Recent</Text>
         </View>
         {recentLocations.map((location) => (
-          <AppCard key={location.id} pressable onPress={() => setSelectedId(location.id)}>
+          <AppCard key={location.id} variant="outlined" pressable onPress={() => setSelectedId(location.id)}>
             <View style={styles.locationRow}>
               <MapPin color={colors.textMuted} size={18} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{location.name}</Text>
                 <Text style={styles.cardText}>{location.subtext}</Text>
               </View>
-              {selectedId === location.id ? <Check color={colors.primary} size={18} /> : null}
+              {selectedId === location.id ? <Check color={colors.primaryDark} size={18} /> : null}
             </View>
           </AppCard>
         ))}
@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
   iconWrap: {
     width: 42,
     height: 42,
-    borderRadius: radii.md,
-    backgroundColor: "#D8F1F1",
+    borderRadius: radii.lg,
+    backgroundColor: colors.surfaceMuted,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -93,11 +93,11 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   sectionTitle: {
+    fontFamily: fonts.medium,
     fontSize: 13,
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 0.7,
     color: colors.textMuted,
-    fontWeight: "700",
   },
   locationRow: {
     flexDirection: "row",
@@ -105,12 +105,11 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   cardTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title3,
   },
   cardText: {
-    fontSize: 12,
+    fontFamily: fonts.regular,
+    fontSize: 13,
     color: colors.textMuted,
     marginTop: 2,
   },
@@ -123,13 +122,13 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: "rgba(255,255,255,0.9)",
     paddingHorizontal: spacing.md,
     paddingVertical: 10,
   },
   areaText: {
+    fontFamily: fonts.semiBold,
     fontSize: 13,
-    fontWeight: "700",
-    color: colors.text,
+    color: colors.primaryDark,
   },
 });

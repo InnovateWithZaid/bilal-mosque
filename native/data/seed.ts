@@ -1,4 +1,5 @@
-import { Mosque, Announcement, PlaceFeatures, PlaceFacilities } from '@/types';
+import { getBuiltInMosqueCoverKey } from "@/lib/covers";
+import { Mosque, Announcement, PlaceFeatures, PlaceFacilities } from "@/types";
 
 // Helper to create features
 const createFeatures = (overrides: Partial<PlaceFeatures>): PlaceFeatures => ({
@@ -32,6 +33,7 @@ export const mockMosques: Mosque[] = [
     address: 'Shivajinagar, Bangalore, Karnataka',
     lat: 12.9850,
     lng: 77.6050,
+    coverImageUri: getBuiltInMosqueCoverKey(0),
     type: 'mosque',
     features: createFeatures({
       adhan: true,
@@ -78,6 +80,7 @@ export const mockMosques: Mosque[] = [
     address: 'Commercial Street, Bangalore, Karnataka',
     lat: 12.9800,
     lng: 77.6100,
+    coverImageUri: getBuiltInMosqueCoverKey(1),
     type: 'mosque',
     features: createFeatures({
       adhan: true,
@@ -121,6 +124,7 @@ export const mockMosques: Mosque[] = [
     address: 'Koramangala 4th Block, Bangalore, Karnataka',
     lat: 12.9352,
     lng: 77.6245,
+    coverImageUri: getBuiltInMosqueCoverKey(2),
     type: 'mosque',
     features: createFeatures({
       adhan: true,
@@ -164,6 +168,7 @@ export const mockMosques: Mosque[] = [
     address: 'Frazer Town, Bangalore, Karnataka',
     lat: 12.9950,
     lng: 77.6150,
+    coverImageUri: getBuiltInMosqueCoverKey(3),
     type: 'mosque',
     features: createFeatures({
       adhan: true,
@@ -209,6 +214,7 @@ export const mockMosques: Mosque[] = [
     address: 'Prestige Tech Park, Outer Ring Road, Bangalore, Karnataka',
     lat: 12.9250,
     lng: 77.6900,
+    coverImageUri: getBuiltInMosqueCoverKey(0),
     type: 'musallah',
     features: createFeatures({
       adhan: true,
@@ -245,6 +251,7 @@ export const mockMosques: Mosque[] = [
     address: 'Mantri Square Mall, Malleswaram, Bangalore, Karnataka',
     lat: 12.9916,
     lng: 77.5712,
+    coverImageUri: getBuiltInMosqueCoverKey(1),
     type: 'musallah',
     features: createFeatures({
       adhan: false,
@@ -281,6 +288,7 @@ export const mockMosques: Mosque[] = [
     address: 'Salarpuria Sattva, HSR Layout, Bangalore, Karnataka',
     lat: 12.9121,
     lng: 77.6446,
+    coverImageUri: getBuiltInMosqueCoverKey(2),
     type: 'musallah',
     features: createFeatures({
       adhan: true,
@@ -317,6 +325,7 @@ export const mockMosques: Mosque[] = [
     address: 'Terminal 1, Kempegowda International Airport, Bangalore, Karnataka',
     lat: 13.1989,
     lng: 77.7068,
+    coverImageUri: getBuiltInMosqueCoverKey(3),
     type: 'musallah',
     features: createFeatures({
       adhan: false,
@@ -353,6 +362,7 @@ export const mockMosques: Mosque[] = [
     address: 'Shivajinagar, Bangalore, Karnataka',
     lat: 12.9870,
     lng: 77.6020,
+    coverImageUri: getBuiltInMosqueCoverKey(0),
     type: 'eidgah',
     features: createFeatures({
       adhan: false,
@@ -391,6 +401,7 @@ export const mockMosques: Mosque[] = [
     address: 'Chamarajpet, Bangalore, Karnataka',
     lat: 12.9580,
     lng: 77.5680,
+    coverImageUri: getBuiltInMosqueCoverKey(1),
     type: 'eidgah',
     features: createFeatures({
       adhan: false,

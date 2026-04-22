@@ -1,16 +1,16 @@
-import { RefreshControl, StyleSheet, Text, View } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useMemo, useState } from "react";
 
-import { AppScreen } from "@/components/AppScreen";
 import { AppHeader } from "@/components/AppHeader";
+import { AppScreen } from "@/components/AppScreen";
 import { Chip } from "@/components/Chip";
 import { LoadingState } from "@/components/LoadingState";
 import { MosqueCard } from "@/components/MosqueCard";
 import { TextField } from "@/components/TextField";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, spacing } from "@/lib/theme";
 import { useBangaloreTime } from "@/hooks/useBangaloreTime";
 import { useNextPrayer } from "@/hooks/useNextPrayer";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 import type { Mosque, PrayerName } from "@/types";
 
 const filters = ["All", "Mosque", "Musallah", "Eidgah", "Jummah", "Eid"] as const;
@@ -69,13 +69,14 @@ export default function MosquesScreen() {
       contentContainerStyle={styles.content}
       refreshControl={<RefreshControl refreshing={false} onRefresh={() => void refresh()} tintColor={colors.primary} />}
     >
-      <AppHeader title="Mosques" subtitle="Find your next jama'ah across Bangalore." />
+      <AppHeader title="Mosques" subtitle="Curated prayer spaces across Bangalore" />
+      <Text style={styles.heroCopy}>Search by area, filter by place type, and jump into the mosque that fits the prayer you need right now.</Text>
       <TextField value={search} onChangeText={setSearch} placeholder="Search by name or area" />
-      <View style={styles.chips}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
         {filters.map((filter) => (
           <Chip key={filter} label={filter} active={activeFilter === filter} onPress={() => setActiveFilter(filter)} />
         ))}
-      </View>
+      </ScrollView>
       <Text style={styles.count}>{filteredMosques.length} results</Text>
       <View style={styles.list}>
         {filteredMosques.map((mosque) => (
@@ -90,16 +91,20 @@ const styles = StyleSheet.create({
   content: {
     gap: spacing.md,
   },
+  heroCopy: {
+    ...typography.body,
+  },
   chips: {
-    flexDirection: "row",
-    flexWrap: "wrap",
     gap: spacing.sm,
   },
   count: {
+    fontFamily: fonts.medium,
     fontSize: 12,
     color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   list: {
-    gap: spacing.sm,
+    gap: spacing.md,
   },
 });

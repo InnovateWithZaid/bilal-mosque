@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { mockAnnouncements, mockMosques } from "@/data/seed";
+import { deleteManagedMosqueCoverAsync } from "@/lib/media";
 import { getJson, setJson } from "@/lib/storage";
 import type { Announcement, Mosque, Report } from "@/types";
 
@@ -126,6 +127,11 @@ export function MosqueDataProvider({ children }: { children: ReactNode }) {
   };
 
   const updateMosque = async (id: string, updates: Partial<Mosque>) => {
+    const current = mosques.find((mosque) => mosque.id === id);
+    if (current?.coverImageUri && updates.coverImageUri && current.coverImageUri !== updates.coverImageUri) {
+      await deleteManagedMosqueCoverAsync(current.coverImageUri);
+    }
+
     const next = mosques.map((mosque) =>
       mosque.id === id ? { ...mosque, ...updates, lastUpdatedAt: new Date() } : mosque,
     );
@@ -134,9 +140,12 @@ export function MosqueDataProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteMosque = async (id: string) => {
+    const mosqueToDelete = mosques.find((mosque) => mosque.id === id);
     const nextMosques = mosques.filter((mosque) => mosque.id !== id);
     const nextAnnouncements = announcements.filter((announcement) => announcement.mosqueId !== id);
     const nextReports = reports.filter((report) => report.mosqueId !== id);
+
+    await deleteManagedMosqueCoverAsync(mosqueToDelete?.coverImageUri);
 
     await Promise.all([
       persistMosques(nextMosques),

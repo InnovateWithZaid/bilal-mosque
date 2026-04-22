@@ -11,9 +11,9 @@ import { MosqueCard } from "@/components/MosqueCard";
 import { TextField } from "@/components/TextField";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, spacing } from "@/lib/theme";
 import { useBangaloreTime } from "@/hooks/useBangaloreTime";
 import { useNextPrayer } from "@/hooks/useNextPrayer";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 import type { Mosque, PrayerName } from "@/types";
 
 const prayerLabels: Record<PrayerName, string> = {
@@ -66,10 +66,11 @@ export default function FavoritesScreen() {
       refreshControl={<RefreshControl refreshing={false} onRefresh={() => void refresh()} tintColor={colors.primary} />}
     >
       <AppHeader title="Favorites" subtitle={`${favorites.length} saved mosque${favorites.length === 1 ? "" : "s"}`} />
+      {favorites.length > 0 ? <Text style={styles.lead}>Keep your most-used mosques one tap away, with current iqamah timing visible at a glance.</Text> : null}
       {favorites.length > 0 ? <TextField value={search} onChangeText={setSearch} placeholder="Search favorites" /> : null}
       {favorites.length === 0 ? (
         <EmptyState
-          icon={<Heart color={colors.primary} size={34} />}
+          icon={<Heart color={colors.primaryDark} size={34} />}
           title="No favorites yet"
           description="Follow a mosque to keep it one tap away on your phone."
           actionLabel="Browse mosques"
@@ -94,13 +95,17 @@ const styles = StyleSheet.create({
   content: {
     gap: spacing.md,
   },
+  lead: {
+    ...typography.body,
+  },
   list: {
-    gap: spacing.sm,
+    gap: spacing.md,
   },
   emptyResults: {
     paddingVertical: spacing.xl,
   },
   emptyResultsText: {
+    fontFamily: fonts.medium,
     color: colors.textMuted,
     fontSize: 14,
     textAlign: "center",

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { AppCard } from "@/components/AppCard";
 import { AppButton } from "@/components/AppButton";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 
 type EmptyStateProps = {
   icon?: React.ReactNode;
@@ -14,7 +14,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ icon, title, description, actionLabel, onActionPress }: EmptyStateProps) {
   return (
-    <AppCard style={styles.card}>
+    <AppCard variant="glass" style={styles.card}>
       <View style={styles.icon}>{icon}</View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
@@ -30,17 +30,22 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xl,
   },
   icon: {
+    width: 64,
+    height: 64,
+    borderRadius: radii.pill,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.surfaceMuted,
     marginBottom: spacing.xs,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title2,
+    textAlign: "center",
   },
   description: {
-    fontSize: 14,
+    ...typography.body,
+    fontFamily: fonts.regular,
     color: colors.textMuted,
     textAlign: "center",
-    lineHeight: 20,
   },
 });

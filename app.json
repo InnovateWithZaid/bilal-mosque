@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Bilal",
-    "slug": "bilal",
+    "slug": "bilal-mosque-app-salah-timings-mosque-community",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F4F7F7"
+      "backgroundColor": "#F6FBFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -22,7 +22,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#F4F7F7"
+        "backgroundColor": "#F6FBFF"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.bilalmosque.app",
@@ -32,7 +32,20 @@
       ]
     },
     "plugins": [
-      "expo-router"
-    ]
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Bilal uses your photo library so admins can add mosque cover photos."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f735a09a-d06e-41e7-b164-1836a7c0ef04"
+      }
+    },
+    "owner": "zaids-org"
   }
 }

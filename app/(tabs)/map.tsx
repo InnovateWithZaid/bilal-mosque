@@ -10,10 +10,11 @@ import { AppCard } from "@/components/AppCard";
 import { AppScreen } from "@/components/AppScreen";
 import { Chip } from "@/components/Chip";
 import { LoadingState } from "@/components/LoadingState";
+import { MosqueCover } from "@/components/MosqueCover";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
 import { formatDistance } from "@/lib/format";
 import { openDirections } from "@/lib/maps";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 import type { Mosque } from "@/types";
 
 const filters = ["All", "Nearby", "Jummah", "Mosque", "Musallah", "Eidgah"] as const;
@@ -131,15 +132,17 @@ export default function MapScreen() {
         </MapView>
 
         <View style={styles.topOverlay}>
-          <View style={styles.topRow}>
-            <View style={styles.titleCard}>
-              <Text style={styles.title}>Mosque map</Text>
-              <Text style={styles.subtitle}>Native map with location-aware discovery.</Text>
+          <AppCard variant="glass" style={styles.titleCard}>
+            <View style={styles.topRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.title}>Mosque map</Text>
+                <Text style={styles.subtitle}>Tap a pin to preview a mosque and route yourself there quickly.</Text>
+              </View>
+              <Pressable style={styles.iconButton} onPress={() => void locateUser()}>
+                {loadingLocation ? <ActivityIndicator color={colors.primaryDark} /> : <LocateFixed color={colors.primaryDark} size={20} />}
+              </Pressable>
             </View>
-            <Pressable style={styles.iconButton} onPress={() => void locateUser()}>
-              {loadingLocation ? <ActivityIndicator color={colors.primary} /> : <LocateFixed color={colors.primary} size={20} />}
-            </Pressable>
-          </View>
+          </AppCard>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
             {filters.map((filter) => (
               <Chip key={filter} label={filter} active={filter === activeFilter} onPress={() => setActiveFilter(filter)} />
@@ -149,32 +152,43 @@ export default function MapScreen() {
 
         {selectedMosque ? (
           <View style={styles.bottomOverlay}>
-            <AppCard>
-              <View style={styles.selectedHeader}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.selectedTitle}>{selectedMosque.name}</Text>
-                  <Text style={styles.selectedText}>{formatDistance(selectedMosque.distance)}</Text>
+            <AppCard variant="image" padding={0}>
+              <MosqueCover uri={selectedMosque.coverImageUri} height={162} overlay="strong">
+                <View style={styles.selectedHeader}>
+                  <View>
+                    <Text style={styles.selectedEyebrow}>Selected mosque</Text>
+                    <Text style={styles.selectedTitle}>{selectedMosque.name}</Text>
+                    <Text style={styles.selectedText}>{formatDistance(selectedMosque.distance)}</Text>
+                  </View>
+                  <Pressable
+                    style={styles.closeButton}
+                    onPress={() => {
+                      setSelectedMosque(null);
+                      setRouteCoords(null);
+                    }}
+                  >
+                    <X color={colors.white} size={20} />
+                  </Pressable>
                 </View>
-                <Pressable onPress={() => { setSelectedMosque(null); setRouteCoords(null); }}>
-                  <X color={colors.textMuted} size={20} />
-                </Pressable>
+              </MosqueCover>
+              <View style={styles.selectedBody}>
+                <Text style={styles.selectedAddress}>{selectedMosque.address}</Text>
+                <View style={styles.actionRow}>
+                  <AppButton
+                    label={loadingRoute ? "Routing..." : "Show route"}
+                    icon={<Route color={colors.white} size={16} />}
+                    onPress={() => void showRoute(selectedMosque)}
+                    loading={loadingRoute}
+                  />
+                  <AppButton
+                    label="Directions"
+                    variant="outline"
+                    icon={<MapPinned color={colors.text} size={16} />}
+                    onPress={() => void openDirections(selectedMosque)}
+                  />
+                </View>
+                <AppButton label="Open details" variant="ghost" onPress={() => router.push(`/mosque/${selectedMosque.id}`)} />
               </View>
-              <Text style={styles.selectedAddress}>{selectedMosque.address}</Text>
-              <View style={styles.actionRow}>
-                <AppButton
-                  label={loadingRoute ? "Routing..." : "Show route"}
-                  icon={<Route color={colors.white} size={16} />}
-                  onPress={() => void showRoute(selectedMosque)}
-                  loading={loadingRoute}
-                />
-                <AppButton
-                  label="Directions"
-                  variant="outline"
-                  icon={<MapPinned color={colors.text} size={16} />}
-                  onPress={() => void openDirections(selectedMosque)}
-                />
-              </View>
-              <AppButton label="Open details" variant="ghost" onPress={() => router.push(`/mosque/${selectedMosque.id}`)} />
             </AppCard>
           </View>
         ) : null}
@@ -199,29 +213,22 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   titleCard: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radii.lg,
-    backgroundColor: "rgba(255,255,255,0.96)",
+    padding: spacing.md,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: colors.text,
+    ...typography.title2,
   },
   subtitle: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 2,
+    ...typography.body,
+    fontSize: 13,
   },
   iconButton: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.96)",
+    backgroundColor: "rgba(255,255,255,0.92)",
   },
   filterRow: {
     gap: spacing.sm,
@@ -230,29 +237,50 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 16,
     right: 16,
-    bottom: 20,
+    bottom: 108,
   },
   selectedHeader: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+  },
+  selectedEyebrow: {
+    fontFamily: fonts.medium,
+    fontSize: 11,
+    color: "rgba(255,255,255,0.72)",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   selectedTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: colors.text,
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    color: colors.white,
+    marginTop: 4,
   },
   selectedText: {
+    fontFamily: fonts.medium,
     fontSize: 13,
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.82)",
+    marginTop: 4,
+  },
+  closeButton: {
+    width: 38,
+    height: 38,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(12, 47, 61, 0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  selectedBody: {
+    padding: spacing.md,
+    gap: spacing.sm,
+    backgroundColor: colors.surface,
   },
   selectedAddress: {
-    marginTop: spacing.xs,
+    ...typography.body,
     fontSize: 13,
-    color: colors.textMuted,
   },
   actionRow: {
-    marginTop: spacing.md,
     gap: spacing.sm,
   },
   callout: {
@@ -260,12 +288,13 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
   },
   calloutTitle: {
+    fontFamily: fonts.semiBold,
     fontSize: 15,
-    fontWeight: "700",
     color: colors.text,
   },
   calloutText: {
     marginTop: 4,
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.textMuted,
   },

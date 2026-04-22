@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { LoadingState } from "@/components/LoadingState";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 export default function NotificationsScreen() {
   const { ready: favoritesReady, favorites } = useFavorites();
@@ -27,9 +27,10 @@ export default function NotificationsScreen() {
   return (
     <AppScreen contentContainerStyle={styles.content}>
       <AppHeader title="Notifications" subtitle="Updates from the mosques you follow." showBack />
+      {favoriteAnnouncements.length > 0 ? <Text style={styles.lead}>Recent community notes, schedule changes, and event announcements from your saved mosques.</Text> : null}
       {favorites.length === 0 ? (
         <EmptyState
-          icon={<Heart color={colors.primary} size={34} />}
+          icon={<Heart color={colors.primaryDark} size={34} />}
           title="No favorites yet"
           description="Follow a mosque first, and its updates will show up here."
         />
@@ -57,6 +58,9 @@ const styles = StyleSheet.create({
   content: {
     gap: spacing.md,
   },
+  lead: {
+    ...typography.body,
+  },
   list: {
     gap: spacing.md,
   },
@@ -64,9 +68,11 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   label: {
+    fontFamily: fonts.medium,
     fontSize: 12,
-    fontWeight: "700",
     color: colors.textMuted,
     paddingHorizontal: spacing.xs,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
 });

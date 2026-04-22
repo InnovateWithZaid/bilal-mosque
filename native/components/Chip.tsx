@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing } from "@/lib/theme";
 
 type ChipProps = {
   label: string;
@@ -19,26 +19,26 @@ export function Chip({ label, active, onPress }: ChipProps) {
 const styles = StyleSheet.create({
   base: {
     borderRadius: radii.pill,
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 14,
     paddingVertical: 10,
     borderWidth: 1,
   },
   active: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: colors.primaryDark,
+    borderColor: colors.primaryDark,
   },
   inactive: {
-    backgroundColor: colors.surface,
+    backgroundColor: "rgba(255,255,255,0.88)",
     borderColor: colors.border,
   },
   text: {
+    fontFamily: fonts.semiBold,
     fontSize: 13,
-    fontWeight: "700",
   },
   activeText: {
     color: colors.white,
   },
   inactiveText: {
-    color: colors.textMuted,
+    color: colors.primaryDark,
   },
 });

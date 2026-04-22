@@ -10,7 +10,7 @@ import { AppScreen } from "@/components/AppScreen";
 import { LoadingState } from "@/components/LoadingState";
 import { TextField } from "@/components/TextField";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 export default function AdminLoginScreen() {
   const router = useRouter();
@@ -54,11 +54,11 @@ export default function AdminLoginScreen() {
 
   return (
     <AppScreen contentContainerStyle={styles.content}>
-      <AppHeader title="Core admin login" subtitle="Local native demo access for all mosques." showBack />
-      <AppCard style={styles.card}>
-        <Lock color={colors.primary} size={30} />
+      <AppHeader title="Core admin login" subtitle="Local native demo access for all mosques" showBack />
+      <AppCard variant="glass" style={styles.card}>
+        <Lock color={colors.primaryDark} size={30} />
         <Text style={styles.title}>Core administrators only</Text>
-        <Text style={styles.description}>This Expo conversion keeps the original demo admin flow for now.</Text>
+        <Text style={styles.description}>This Expo conversion keeps the original demo admin flow for now, but the UI now matches the main app experience.</Text>
       </AppCard>
       <TextField
         label="Admin PIN"
@@ -83,19 +83,17 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: colors.text,
+    ...typography.title2,
+    textAlign: "center",
   },
   description: {
-    fontSize: 14,
-    color: colors.textMuted,
+    ...typography.body,
     textAlign: "center",
   },
   helper: {
     textAlign: "center",
     color: colors.warning,
+    fontFamily: fonts.semiBold,
     fontSize: 13,
-    fontWeight: "700",
   },
 });

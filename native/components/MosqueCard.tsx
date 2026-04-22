@@ -1,11 +1,12 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
 import { Heart, MapPin, Route } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
 import { AppCard } from "@/components/AppCard";
-import { colors, hitSlop, radii, spacing } from "@/lib/theme";
-import { formatDistance, getPlaceTypeLabel } from "@/lib/format";
+import { MosqueCover } from "@/components/MosqueCover";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { formatDistance, getPlaceTypeLabel } from "@/lib/format";
+import { colors, fonts, hitSlop, radii, spacing, typography } from "@/lib/theme";
 import type { Mosque } from "@/types";
 
 type MosqueCardProps = {
@@ -14,97 +15,135 @@ type MosqueCardProps = {
   athanTime?: string;
   iqamahTime?: string;
   countdown?: string;
+  cardWidth?: number;
+  style?: ViewStyle;
 };
 
-export function MosqueCard({ mosque, nextPrayer, athanTime, iqamahTime, countdown }: MosqueCardProps) {
+export function MosqueCard({ mosque, nextPrayer, athanTime, iqamahTime, countdown, cardWidth, style }: MosqueCardProps) {
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
   const favorite = isFavorite(mosque.id);
 
   return (
-    <AppCard pressable onPress={() => router.push(`/mosque/${mosque.id}`)} style={styles.card}>
-      <Pressable
-        hitSlop={hitSlop}
-        onPress={() => void toggleFavorite(mosque.id)}
-        style={styles.favoriteButton}
-      >
-        <Heart color={favorite ? colors.primary : colors.textMuted} fill={favorite ? colors.primary : "transparent"} size={18} />
-      </Pressable>
-      <View style={styles.topRow}>
-        <View style={styles.iconWrap}>
-          <Route color={mosque.type === "eidgah" ? colors.accent : colors.primary} size={18} />
+    <AppCard
+      pressable
+      onPress={() => router.push(`/mosque/${mosque.id}`)}
+      variant="image"
+      padding={0}
+      style={[cardWidth ? { width: cardWidth } : null, style]}
+    >
+      <MosqueCover uri={mosque.coverImageUri} height={cardWidth ? 228 : 214} overlay="strong">
+        <View style={styles.coverTop}>
+          <View style={styles.typePill}>
+            <Route color={mosque.type === "eidgah" ? colors.accent : colors.primaryDark} size={14} />
+            <Text style={styles.typePillText}>{getPlaceTypeLabel(mosque.type)}</Text>
+          </View>
+          <Pressable
+            hitSlop={hitSlop}
+            onPress={(event) => {
+              event.stopPropagation();
+              void toggleFavorite(mosque.id);
+            }}
+            style={styles.favoriteButton}
+          >
+            <Heart color={favorite ? colors.danger : colors.white} fill={favorite ? colors.danger : "transparent"} size={18} />
+          </Pressable>
         </View>
-        <View style={styles.info}>
-          <Text style={styles.name}>{mosque.name}</Text>
+        <View style={styles.coverBottom}>
+          <Text numberOfLines={2} style={styles.name}>
+            {mosque.name}
+          </Text>
           <View style={styles.addressRow}>
-            <MapPin color={colors.textMuted} size={13} />
+            <MapPin color="rgba(255,255,255,0.82)" size={13} />
             <Text style={styles.distance}>{formatDistance(mosque.distance)}</Text>
           </View>
           <View style={styles.badges}>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{getPlaceTypeLabel(mosque.type)}</Text>
-            </View>
             {mosque.features.jummah ? (
-              <View style={[styles.badge, styles.subtleBadge]}>
-                <Text style={[styles.badgeText, styles.subtleBadgeText]}>Jummah</Text>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>Jummah</Text>
+              </View>
+            ) : null}
+            {mosque.features.eidPrayer ? (
+              <View style={[styles.badge, styles.goldBadge]}>
+                <Text style={[styles.badgeText, styles.goldBadgeText]}>Eid</Text>
               </View>
             ) : null}
           </View>
         </View>
-      </View>
+      </MosqueCover>
       {nextPrayer && iqamahTime ? (
         <View style={styles.footer}>
-          <Text style={styles.footerLabel}>
-            {nextPrayer}: {athanTime ? `${athanTime} → ` : ""}
-          </Text>
-          <Text style={styles.footerTime}>{iqamahTime}</Text>
-          {countdown ? <Text style={styles.countdown}>{countdown}</Text> : null}
+          <View style={styles.footerCopy}>
+            <Text style={styles.footerLabel}>Next prayer</Text>
+            <Text style={styles.footerPrayer}>
+              {nextPrayer}
+              {athanTime ? ` / ${athanTime}` : ""}
+            </Text>
+          </View>
+          <View style={styles.timeBlock}>
+            <Text style={styles.footerTime}>{iqamahTime}</Text>
+            {countdown ? <Text style={styles.countdown}>{countdown}</Text> : null}
+          </View>
         </View>
-      ) : null}
+      ) : (
+        <View style={styles.footer}>
+          <View style={styles.footerCopy}>
+            <Text style={styles.footerLabel}>Community-ready listing</Text>
+            <Text style={styles.footerPrayer}>Prayer and mosque details available inside</Text>
+          </View>
+        </View>
+      )}
     </AppCard>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    gap: spacing.md,
+  coverTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   favoriteButton: {
-    position: "absolute",
-    top: spacing.md,
-    right: spacing.md,
-    zIndex: 2,
-  },
-  topRow: {
-    flexDirection: "row",
-    gap: spacing.sm,
-  },
-  iconWrap: {
-    width: 46,
-    height: 46,
-    borderRadius: radii.md,
-    backgroundColor: "#DFF4F4",
+    width: 40,
+    height: 40,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(22, 49, 63, 0.18)",
     alignItems: "center",
     justifyContent: "center",
   },
-  info: {
-    flex: 1,
-    gap: 6,
-    paddingRight: 28,
+  typePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(255,255,255,0.88)",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  typePillText: {
+    fontFamily: fonts.semiBold,
+    fontSize: 12,
+    color: colors.primaryDark,
+  },
+  coverBottom: {
+    gap: spacing.xs,
   },
   name: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.text,
+    fontFamily: fonts.bold,
+    fontSize: 22,
+    lineHeight: 28,
+    color: colors.white,
   },
   addressRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 6,
   },
   distance: {
+    fontFamily: fonts.medium,
     fontSize: 13,
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.8)",
   },
   badges: {
     flexDirection: "row",
@@ -114,43 +153,56 @@ const styles = StyleSheet.create({
   badge: {
     borderRadius: radii.pill,
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: "#D8F1F1",
+    paddingVertical: 6,
+    backgroundColor: "rgba(255,255,255,0.18)",
   },
   badgeText: {
+    fontFamily: fonts.medium,
     fontSize: 11,
-    fontWeight: "700",
-    color: colors.primaryDark,
+    color: colors.white,
   },
-  subtleBadge: {
-    backgroundColor: colors.surfaceMuted,
+  goldBadge: {
+    backgroundColor: "rgba(200, 164, 90, 0.22)",
   },
-  subtleBadgeText: {
-    color: colors.textMuted,
+  goldBadgeText: {
+    color: "#FFF4D7",
   },
   footer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xs,
-    borderRadius: radii.md,
-    backgroundColor: "#F0F6F6",
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
+    justifyContent: "space-between",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    backgroundColor: colors.surface,
+  },
+  footerCopy: {
+    flex: 1,
+    gap: 3,
   },
   footerLabel: {
     fontSize: 12,
+    fontFamily: fonts.medium,
+    letterSpacing: 0.4,
     color: colors.textMuted,
-    flexShrink: 1,
+    textTransform: "uppercase",
+  },
+  footerPrayer: {
+    ...typography.bodyStrong,
+    fontSize: 14,
+  },
+  timeBlock: {
+    alignItems: "flex-end",
   },
   footerTime: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.number,
+    fontFamily: fonts.bold,
+    fontSize: 15,
+    color: colors.primaryDark,
   },
   countdown: {
-    marginLeft: "auto",
     fontSize: 12,
-    fontWeight: "700",
+    fontFamily: fonts.medium,
     color: colors.primaryDark,
   },
 });

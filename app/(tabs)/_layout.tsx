@@ -1,25 +1,34 @@
 import { Tabs } from "expo-router";
 import { Building2, Heart, House, Map, Settings } from "lucide-react-native";
 
-import { colors } from "@/lib/theme";
+import { colors, fonts, radii } from "@/lib/theme";
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: colors.primaryDark,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
-          height: 68,
-          paddingTop: 8,
-          paddingBottom: 10,
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border,
+          position: "absolute",
+          left: 18,
+          right: 18,
+          bottom: 18,
+          height: 74,
+          paddingTop: 10,
+          paddingBottom: 12,
+          backgroundColor: "rgba(255,255,255,0.96)",
+          borderTopColor: "transparent",
+          borderRadius: radii.xl,
+          boxShadow: "0px 18px 42px rgba(14, 90, 114, 0.16)",
         },
         tabBarLabelStyle: {
-          fontWeight: "700",
+          fontFamily: fonts.semiBold,
           fontSize: 11,
+        },
+        tabBarItemStyle: {
+          borderRadius: radii.lg,
         },
       }}
     >

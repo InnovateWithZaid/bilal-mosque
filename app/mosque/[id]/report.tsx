@@ -9,12 +9,12 @@ import { AppHeader } from "@/components/AppHeader";
 import { AppScreen } from "@/components/AppScreen";
 import { TextField } from "@/components/TextField";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, radii, spacing, typography } from "@/lib/theme";
 import type { IssueType } from "@/types";
 
 const issueTypes: Array<{ key: IssueType; label: string; description: string; icon: React.ReactNode }> = [
-  { key: "wrong_times", label: "Wrong iqamah times", description: "Prayer times are incorrect or outdated.", icon: <Clock3 color={colors.primary} size={20} /> },
-  { key: "wrong_location", label: "Wrong location", description: "Address or map location is incorrect.", icon: <MapPin color={colors.primary} size={20} /> },
+  { key: "wrong_times", label: "Wrong iqamah times", description: "Prayer times are incorrect or outdated.", icon: <Clock3 color={colors.primaryDark} size={20} /> },
+  { key: "wrong_location", label: "Wrong location", description: "Address or map location is incorrect.", icon: <MapPin color={colors.primaryDark} size={20} /> },
   { key: "closed", label: "Mosque closed", description: "The mosque is temporarily or permanently closed.", icon: <XCircle color={colors.danger} size={20} /> },
   { key: "other", label: "Other issue", description: "Anything else not covered above.", icon: <HelpCircle color={colors.textMuted} size={20} /> },
 ];
@@ -53,17 +53,18 @@ export default function ReportScreen() {
   return (
     <AppScreen contentContainerStyle={styles.content}>
       <AppHeader title="Report issue" subtitle={mosque?.name ?? "Flag a problem"} showBack />
+      <Text style={styles.lead}>Let the team know if a timing, address, or availability detail is inaccurate so the listing stays useful for everyone.</Text>
       <View style={styles.list}>
         {issueTypes.map((issue) => (
           <Pressable key={issue.key} onPress={() => setSelectedType(issue.key)}>
-            <AppCard style={[styles.issueCard, selectedType === issue.key && styles.issueCardActive]}>
+            <AppCard style={[styles.issueCard, selectedType === issue.key && styles.issueCardActive]} variant={selectedType === issue.key ? "glass" : "outlined"}>
               <View style={styles.issueRow}>
                 <View style={styles.issueIcon}>{issue.icon}</View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.issueTitle}>{issue.label}</Text>
                   <Text style={styles.issueText}>{issue.description}</Text>
                 </View>
-                {selectedType === issue.key ? <Flag color={colors.primary} size={18} /> : null}
+                {selectedType === issue.key ? <Flag color={colors.primaryDark} size={18} /> : null}
               </View>
             </AppCard>
           </Pressable>
@@ -85,15 +86,15 @@ const styles = StyleSheet.create({
   content: {
     gap: spacing.md,
   },
+  lead: {
+    ...typography.body,
+  },
   list: {
     gap: spacing.sm,
   },
-  issueCard: {
-    borderColor: colors.border,
-  },
+  issueCard: {},
   issueCardActive: {
     borderColor: colors.primary,
-    backgroundColor: "#F1FBFB",
   },
   issueRow: {
     flexDirection: "row",
@@ -103,19 +104,16 @@ const styles = StyleSheet.create({
   issueIcon: {
     width: 42,
     height: 42,
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
     backgroundColor: colors.surfaceMuted,
     alignItems: "center",
     justifyContent: "center",
   },
   issueTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title3,
   },
   issueText: {
-    marginTop: 2,
-    fontSize: 12,
-    color: colors.textMuted,
+    ...typography.body,
+    fontSize: 13,
   },
 });

@@ -5,7 +5,7 @@ import { AppCard } from "@/components/AppCard";
 import { AppHeader } from "@/components/AppHeader";
 import { AppScreen } from "@/components/AppScreen";
 import { SettingRow } from "@/components/SettingRow";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 const SUPPORT_EMAIL = "support@bilalmosque.app";
 
@@ -24,27 +24,27 @@ export default function SupportScreen() {
   return (
     <AppScreen contentContainerStyle={styles.content}>
       <AppHeader title="Help & support" subtitle="Support details for the Expo native build" showBack />
-      <AppCard style={styles.hero}>
+      <AppCard variant="glass" style={styles.hero}>
+        <Text style={styles.heroEyebrow}>Support</Text>
         <Text style={styles.heroTitle}>Need help with Bilal?</Text>
         <Text style={styles.heroText}>
-          This build focuses on native navigation, local persistence, and mobile-first discovery. Use the options below
-          to get support or report problems.
+          This build focuses on native navigation, local persistence, mosque cover photos, and mobile-first discovery. Use the options below to get support or report problems.
         </Text>
       </AppCard>
       <SettingRow
-        icon={<Mail color={colors.primary} size={20} />}
+        icon={<Mail color={colors.primaryDark} size={20} />}
         title="Email support"
         description={SUPPORT_EMAIL}
         onPress={() => void openEmail()}
         chevron
       />
       <SettingRow
-        icon={<Smartphone color={colors.primary} size={20} />}
+        icon={<Smartphone color={colors.primaryDark} size={20} />}
         title="App issue"
         description="Use the in-app report flow on a mosque page to flag bad times or location details."
       />
       <SettingRow
-        icon={<Wrench color={colors.primary} size={20} />}
+        icon={<Wrench color={colors.primaryDark} size={20} />}
         title="Troubleshooting"
         description="If maps or location do not work, confirm device permissions and internet access first."
       />
@@ -59,14 +59,17 @@ const styles = StyleSheet.create({
   hero: {
     gap: spacing.xs,
   },
+  heroEyebrow: {
+    fontFamily: fonts.medium,
+    fontSize: 12,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
   heroTitle: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: colors.text,
+    ...typography.title1,
   },
   heroText: {
-    fontSize: 14,
-    lineHeight: 22,
-    color: colors.textMuted,
+    ...typography.body,
   },
 });

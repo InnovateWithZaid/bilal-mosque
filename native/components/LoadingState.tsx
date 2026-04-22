@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 export function LoadingState({ label = "Loading Bilal..." }: { label?: string }) {
   return (
@@ -18,9 +18,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: spacing.sm,
     padding: spacing.xl,
+    backgroundColor: colors.background,
   },
   label: {
-    fontSize: 14,
+    ...typography.bodyStrong,
+    fontFamily: fonts.medium,
     color: colors.textMuted,
   },
 });

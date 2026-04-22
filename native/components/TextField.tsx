@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from "react-native";
 
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 
 type TextFieldProps = {
   label?: string;
@@ -24,30 +24,32 @@ export function TextField({ label, hint, style, multiline, ...props }: TextField
 
 const styles = StyleSheet.create({
   wrapper: {
-    gap: spacing.xs,
+    gap: 8,
   },
   label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.text,
+    fontFamily: fonts.semiBold,
+    fontSize: 13,
+    letterSpacing: 0.3,
+    color: colors.primaryDark,
   },
   hint: {
-    fontSize: 12,
+    ...typography.meta,
     color: colors.textMuted,
   },
   input: {
-    minHeight: 50,
-    borderRadius: radii.md,
+    minHeight: 56,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: "rgba(255,255,255,0.92)",
     paddingHorizontal: spacing.md,
-    paddingVertical: 14,
+    paddingVertical: 16,
     color: colors.text,
+    fontFamily: fonts.medium,
     fontSize: 15,
   },
   multiline: {
-    minHeight: 110,
+    minHeight: 126,
     textAlignVertical: "top",
   },
 });

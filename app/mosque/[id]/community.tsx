@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useMemo, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
@@ -9,7 +9,7 @@ import { Chip } from "@/components/Chip";
 import { EmptyState } from "@/components/EmptyState";
 import { LoadingState } from "@/components/LoadingState";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, spacing } from "@/lib/theme";
+import { colors, spacing, typography } from "@/lib/theme";
 import type { AnnouncementType } from "@/types";
 
 const filterTypes: Array<AnnouncementType | "all"> = ["all", "talk", "salah_update", "janazah", "notice"];
@@ -36,6 +36,7 @@ export default function CommunityScreen() {
   return (
     <AppScreen contentContainerStyle={styles.content}>
       <AppHeader title="Community" subtitle={mosque?.name ?? "Mosque updates"} showBack />
+      <Text style={styles.lead}>Local schedule updates, talks, notices, and janazah information posted from the mosque dashboard.</Text>
       <View style={styles.chips}>
         {filterTypes.map((filter) => (
           <Chip key={filter} label={filter === "all" ? "All" : filter.replace("_", " ")} active={activeFilter === filter} onPress={() => setActiveFilter(filter)} />
@@ -48,11 +49,7 @@ export default function CommunityScreen() {
           ))}
         </View>
       ) : (
-        <EmptyState
-          icon={<View style={styles.dot} />}
-          title="No announcements"
-          description="This mosque has not posted anything for the selected filter yet."
-        />
+        <EmptyState title="No announcements" description="This mosque has not posted anything for the selected filter yet." />
       )}
     </AppScreen>
   );
@@ -62,6 +59,9 @@ const styles = StyleSheet.create({
   content: {
     gap: spacing.md,
   },
+  lead: {
+    ...typography.body,
+  },
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -69,11 +69,5 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: spacing.sm,
-  },
-  dot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.surfaceMuted,
   },
 });

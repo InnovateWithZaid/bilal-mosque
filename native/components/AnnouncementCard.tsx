@@ -3,7 +3,7 @@ import { AlertTriangle, Bell, CalendarClock, Clock3, MessageSquare } from "lucid
 import { format } from "date-fns";
 
 import { AppCard } from "@/components/AppCard";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 import type { Announcement, AnnouncementType } from "@/types";
 
 type IconConfig = {
@@ -17,26 +17,26 @@ const typeConfig: Record<AnnouncementType, IconConfig> = {
   talk: {
     icon: MessageSquare,
     label: "Islamic Talk",
-    color: colors.primary,
-    background: "#D8F1F1",
+    color: colors.primaryDark,
+    background: "#DDEFF7",
   },
   salah_update: {
     icon: Clock3,
     label: "Salah Update",
     color: colors.secondary,
-    background: "#D7ECEC",
+    background: "#E7F6FA",
   },
   janazah: {
     icon: AlertTriangle,
     label: "Janazah",
     color: colors.danger,
-    background: "#FDE7DE",
+    background: "#FFF0EE",
   },
   notice: {
     icon: Bell,
     label: "Notice",
     color: colors.textMuted,
-    background: colors.surfaceMuted,
+    background: "#F0F7FB",
   },
 };
 
@@ -45,7 +45,7 @@ export function AnnouncementCard({ announcement }: { announcement: Announcement 
   const Icon = config.icon;
 
   return (
-    <AppCard>
+    <AppCard variant="outlined">
       <View style={styles.header}>
         <View style={[styles.iconWrap, { backgroundColor: config.background }]}>
           <Icon color={config.color} size={20} />
@@ -64,7 +64,7 @@ export function AnnouncementCard({ announcement }: { announcement: Announcement 
       {announcement.eventTime ? (
         <View style={styles.event}>
           <CalendarClock color={colors.primary} size={16} />
-          <Text style={styles.eventText}>{format(announcement.eventTime, "EEEE, MMM d • h:mm a")}</Text>
+          <Text style={styles.eventText}>{format(announcement.eventTime, "EEEE, MMM d 'at' h:mm a")}</Text>
         </View>
       ) : null}
     </AppCard>
@@ -77,9 +77,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   iconWrap: {
-    width: 42,
-    height: 42,
-    borderRadius: radii.md,
+    width: 46,
+    height: 46,
+    borderRadius: radii.lg,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -95,26 +95,23 @@ const styles = StyleSheet.create({
   },
   pill: {
     borderRadius: radii.pill,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 11,
+    paddingVertical: 6,
   },
   pillText: {
+    fontFamily: fonts.semiBold,
     fontSize: 11,
-    fontWeight: "700",
   },
   date: {
-    fontSize: 12,
+    ...typography.meta,
     color: colors.textMuted,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title3,
   },
   description: {
     marginTop: spacing.sm,
-    fontSize: 14,
-    lineHeight: 21,
+    ...typography.body,
     color: colors.textMuted,
   },
   event: {
@@ -124,13 +121,13 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
-    borderRadius: radii.md,
-    backgroundColor: "#E8F6F6",
+    borderRadius: radii.lg,
+    backgroundColor: "#EBF7FB",
   },
   eventText: {
     flex: 1,
+    fontFamily: fonts.medium,
     fontSize: 13,
-    fontWeight: "600",
     color: colors.text,
   },
 });

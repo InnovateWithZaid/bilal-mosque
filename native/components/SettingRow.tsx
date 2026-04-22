@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { ChevronRight } from "lucide-react-native";
 
 import { AppCard } from "@/components/AppCard";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 
 type SettingRowProps = {
   icon: React.ReactNode;
@@ -32,13 +32,13 @@ export function SettingRow({ icon, title, description, onPress, chevron, switchV
 
   if (onPress) {
     return (
-      <AppCard pressable onPress={onPress}>
+      <AppCard pressable onPress={onPress} variant="outlined">
         {content}
       </AppCard>
     );
   }
 
-  return <AppCard>{content}</AppCard>;
+  return <AppCard variant="outlined">{content}</AppCard>;
 }
 
 const styles = StyleSheet.create({
@@ -48,9 +48,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   iconWrap: {
-    width: 42,
-    height: 42,
-    borderRadius: radii.md,
+    width: 48,
+    height: 48,
+    borderRadius: radii.lg,
     backgroundColor: colors.surfaceMuted,
     alignItems: "center",
     justifyContent: "center",
@@ -60,13 +60,12 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   title: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title3,
   },
   description: {
-    fontSize: 12,
+    fontFamily: fonts.regular,
+    fontSize: 13,
     color: colors.textMuted,
-    lineHeight: 18,
+    lineHeight: 19,
   },
 });

@@ -8,11 +8,12 @@ import { AppCard } from "@/components/AppCard";
 import { AppHeader } from "@/components/AppHeader";
 import { AppScreen } from "@/components/AppScreen";
 import { LoadingState } from "@/components/LoadingState";
+import { MosqueCover } from "@/components/MosqueCover";
 import { StatCard } from "@/components/StatCard";
 import { TextField } from "@/components/TextField";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
 import { getPlaceTypeLabel } from "@/lib/format";
-import { colors, spacing } from "@/lib/theme";
+import { colors, fonts, radii, spacing, typography } from "@/lib/theme";
 
 export default function AdminMosquesScreen() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function AdminMosquesScreen() {
 
   return (
     <AppScreen contentContainerStyle={styles.content}>
-      <AppHeader title="Manage mosques" subtitle="Create, edit, and delete locations." showBack />
+      <AppHeader title="Manage mosques" subtitle="Create, edit, and delete locations" showBack />
       <AppButton label="Add mosque" icon={<Plus color={colors.white} size={16} />} onPress={() => router.push("/admin/mosques/add")} />
       <TextField value={search} onChangeText={setSearch} placeholder="Search mosques" />
       <View style={styles.statsRow}>
@@ -45,17 +46,18 @@ export default function AdminMosquesScreen() {
       </View>
       <View style={styles.list}>
         {filteredMosques.map((mosque) => (
-          <AppCard key={mosque.id}>
+          <AppCard key={mosque.id} variant="image" padding={0}>
             <View style={styles.row}>
-              <View style={{ flex: 1 }}>
+              <MosqueCover uri={mosque.coverImageUri} height={104} radius={radii.lg} style={styles.thumb} overlay="soft" />
+              <View style={styles.copy}>
                 <Text style={styles.name}>{mosque.name}</Text>
                 <Text style={styles.meta}>
-                  {getPlaceTypeLabel(mosque.type)} • {mosque.address}
+                  {getPlaceTypeLabel(mosque.type)} / {mosque.address}
                 </Text>
               </View>
               <View style={styles.actions}>
                 <Pressable style={styles.iconButton} onPress={() => router.push(`/admin/mosques/${mosque.id}`)}>
-                  <PencilLine color={colors.primary} size={18} />
+                  <PencilLine color={colors.primaryDark} size={18} />
                 </Pressable>
                 <Pressable
                   style={styles.iconButton}
@@ -98,25 +100,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+    padding: spacing.sm,
+  },
+  thumb: {
+    width: 112,
+  },
+  copy: {
+    flex: 1,
+    gap: 4,
   },
   name: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: colors.text,
+    ...typography.title3,
   },
   meta: {
-    marginTop: 4,
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.textMuted,
+    lineHeight: 18,
   },
   actions: {
-    flexDirection: "row",
     gap: spacing.sm,
   },
   iconButton: {
     width: 38,
     height: 38,
-    borderRadius: 19,
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.surfaceMuted,

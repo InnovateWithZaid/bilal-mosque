@@ -37,6 +37,7 @@ export interface Mosque {
   address: string;
   lat: number;
   lng: number;
+  coverImageUri?: string;
   type: PlaceType;
   features: PlaceFeatures;
   facilities?: PlaceFacilities;

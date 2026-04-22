@@ -1,17 +1,20 @@
-import { Alert, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "expo-router";
+import { Camera, ChevronLeft, ImageMinus, MapPin } from "lucide-react-native";
 
 import { AppButton } from "@/components/AppButton";
 import { AppCard } from "@/components/AppCard";
-import { AppHeader } from "@/components/AppHeader";
 import { AppScreen } from "@/components/AppScreen";
 import { Chip } from "@/components/Chip";
 import { LoadingState } from "@/components/LoadingState";
+import { MosqueCover } from "@/components/MosqueCover";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TextField } from "@/components/TextField";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, radii, spacing } from "@/lib/theme";
+import { getBuiltInMosqueCoverKey } from "@/lib/covers";
+import { deleteManagedMosqueCoverAsync, pickMosqueCoverImageAsync } from "@/lib/media";
+import { colors, fonts, hitSlop, radii, spacing, typography } from "@/lib/theme";
 import type { PlaceFacilities, PlaceFeatures, PlaceType, PrayerTimes } from "@/types";
 
 const defaultFeatures: PlaceFeatures = {
@@ -50,6 +53,8 @@ const prayerLabels = [
   { key: "isha", label: "Isha" },
 ] as const;
 
+const scheduleTabs = ["Prayer", "Iqama", "Juma / Eid"] as const;
+
 const featureLabels: Array<{ key: keyof PlaceFeatures; label: string }> = [
   { key: "adhan", label: "Adhan" },
   { key: "dailyCongregation", label: "Daily congregation" },
@@ -85,11 +90,13 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
   const { ready, getMosqueById, addMosque, updateMosque } = useMosqueData();
   const mosque = useMemo(() => (mosqueId ? getMosqueById(mosqueId) : undefined), [getMosqueById, mosqueId]);
   const isEditing = Boolean(mosqueId);
+  const defaultCover = useMemo(() => mosque?.coverImageUri ?? getBuiltInMosqueCoverKey(0), [mosque]);
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [lat, setLat] = useState("12.9716");
   const [lng, setLng] = useState("77.5946");
+  const [coverImageUri, setCoverImageUri] = useState(defaultCover);
   const [type, setType] = useState<PlaceType>("mosque");
   const [features, setFeatures] = useState<PlaceFeatures>(defaultFeatures);
   const [facilities, setFacilities] = useState<PlaceFacilities>(defaultFacilities);
@@ -98,9 +105,11 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
   const [jummahCsv, setJummahCsv] = useState("");
   const [eidCsv, setEidCsv] = useState("");
   const [saving, setSaving] = useState(false);
+  const [scheduleTab, setScheduleTab] = useState<(typeof scheduleTabs)[number]>("Prayer");
 
   useEffect(() => {
     if (!mosque) {
+      setCoverImageUri(getBuiltInMosqueCoverKey(0));
       return;
     }
 
@@ -108,6 +117,7 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
     setAddress(mosque.address);
     setLat(String(mosque.lat));
     setLng(String(mosque.lng));
+    setCoverImageUri(mosque.coverImageUri ?? getBuiltInMosqueCoverKey(0));
     setType(mosque.type);
     setFeatures(mosque.features);
     setFacilities(mosque.facilities ?? defaultFacilities);
@@ -122,12 +132,30 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
   }
 
   if (isEditing && !mosque) {
-    return (
-      <AppScreen>
-        <AppHeader title="Mosque not found" showBack />
-      </AppScreen>
-    );
+    return <LoadingState label="Mosque not found." />;
   }
+
+  const cleanupTransientCover = async (nextUri?: string) => {
+    if (coverImageUri && coverImageUri !== defaultCover && coverImageUri !== nextUri) {
+      await deleteManagedMosqueCoverAsync(coverImageUri);
+    }
+  };
+
+  const handlePickPhoto = async () => {
+    const picked = await pickMosqueCoverImageAsync();
+    if (!picked) {
+      return;
+    }
+
+    await cleanupTransientCover(picked.uri);
+    setCoverImageUri(picked.uri);
+  };
+
+  const handleRemovePhoto = async () => {
+    const fallback = getBuiltInMosqueCoverKey(0);
+    await cleanupTransientCover(fallback);
+    setCoverImageUri(fallback);
+  };
 
   const toggleFeature = (key: keyof PlaceFeatures, value: boolean) => {
     setFeatures((current) => ({ ...current, [key]: value }));
@@ -135,6 +163,11 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
 
   const toggleFacility = (key: keyof PlaceFacilities, value: boolean) => {
     setFacilities((current) => ({ ...current, [key]: value }));
+  };
+
+  const handleCancel = async () => {
+    await cleanupTransientCover(defaultCover);
+    router.back();
   };
 
   const handleSave = async () => {
@@ -150,6 +183,7 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
       address: address.trim(),
       lat: Number.parseFloat(lat) || 12.9716,
       lng: Number.parseFloat(lng) || 77.5946,
+      coverImageUri,
       type,
       features,
       facilities: type === "mosque" ? facilities : undefined,
@@ -174,105 +208,156 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
   };
 
   return (
-    <AppScreen scroll={false}>
-      <AppHeader title={isEditing ? "Edit Mosque" : "Add Mosque"} subtitle="Manage a location used by the native app." showBack />
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <AppCard>
-          <SectionHeader title="Basic info" />
-          <View style={styles.group}>
-            <TextField label="Name" value={name} onChangeText={setName} placeholder="Jamia Masjid Shivajinagar" />
-            <TextField label="Address" value={address} onChangeText={setAddress} placeholder="Shivajinagar, Bangalore" />
-            <View style={styles.inline}>
-              <TextField label="Latitude" value={lat} onChangeText={setLat} keyboardType="decimal-pad" style={styles.field} />
-              <TextField label="Longitude" value={lng} onChangeText={setLng} keyboardType="decimal-pad" style={styles.field} />
+    <AppScreen scroll={false} padded={false}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <MosqueCover uri={coverImageUri} height={280} radius={0} overlay="soft">
+          <View style={styles.heroTop}>
+            <Pressable hitSlop={hitSlop} onPress={() => router.back()} style={styles.backButton}>
+              <ChevronLeft color={colors.white} size={22} />
+            </Pressable>
+          </View>
+          <View style={styles.heroBottom}>
+            <Text style={styles.heroLabel}>{isEditing ? "Edit mosque" : "Add mosque"}</Text>
+            <View style={styles.photoActions}>
+              <Pressable onPress={() => void handlePickPhoto()} style={styles.photoButton}>
+                <Camera color={colors.white} size={16} />
+                <Text style={styles.photoButtonText}>Change Photo</Text>
+              </Pressable>
+              <Pressable onPress={() => void handleRemovePhoto()} style={styles.photoGhostButton}>
+                <ImageMinus color={colors.white} size={16} />
+                <Text style={styles.photoButtonText}>Remove Photo</Text>
+              </Pressable>
             </View>
-            <View style={styles.chips}>
-              {(["mosque", "musallah", "eidgah"] as PlaceType[]).map((value) => (
-                <Chip key={value} label={value} active={type === value} onPress={() => setType(value)} />
-              ))}
-            </View>
           </View>
-        </AppCard>
+        </MosqueCover>
 
-        <AppCard>
-          <SectionHeader title="Prayer times" />
-          <View style={styles.group}>
-            {prayerLabels.map((prayer) => (
-              <View key={`athan-${prayer.key}`} style={styles.inline}>
-                <TextField
-                  label={`${prayer.label} Athan`}
-                  value={athanTimes[prayer.key]}
-                  onChangeText={(value) => setAthanTimes((current) => ({ ...current, [prayer.key]: value }))}
-                  placeholder="5:15 AM"
-                  style={styles.field}
-                />
-                <TextField
-                  label={`${prayer.label} Iqamah`}
-                  value={iqamahTimes[prayer.key]}
-                  onChangeText={(value) => setIqamahTimes((current) => ({ ...current, [prayer.key]: value }))}
-                  placeholder="5:30 AM"
-                  style={styles.field}
-                />
-              </View>
-            ))}
-            <TextField
-              label="Jummah times"
-              hint="Use comma-separated values such as 1:00 PM, 2:00 PM"
-              value={jummahCsv}
-              onChangeText={setJummahCsv}
-            />
-            <TextField
-              label="Eid times"
-              hint="Use comma-separated values such as 7:30 AM, 9:00 AM"
-              value={eidCsv}
-              onChangeText={setEidCsv}
-            />
-          </View>
-        </AppCard>
-
-        <AppCard>
-          <SectionHeader title="Services" />
-          <View style={styles.group}>
-            {featureLabels.map((feature) => (
-              <View key={feature.key} style={styles.switchRow}>
-                <Text style={styles.switchLabel}>{feature.label}</Text>
-                <Switch value={features[feature.key]} onValueChange={(value) => toggleFeature(feature.key, value)} />
-              </View>
-            ))}
-          </View>
-        </AppCard>
-
-        {type === "mosque" ? (
-          <AppCard>
-            <SectionHeader title="Facilities" />
+        <View style={styles.body}>
+          <AppCard variant="glass">
+            <SectionHeader title="Basic info" />
             <View style={styles.group}>
-              {facilityLabels.map((facility) => (
-                <View key={facility.key} style={styles.switchRow}>
-                  <Text style={styles.switchLabel}>{facility.label}</Text>
-                  <Switch
-                    value={Boolean(facilities[facility.key])}
-                    onValueChange={(value) => toggleFacility(facility.key, value)}
-                  />
-                </View>
-              ))}
-              <Text style={styles.switchLabel}>Car parking</Text>
+              <TextField label="Masjid name" value={name} onChangeText={setName} placeholder="Jamia Masjid Shivajinagar" />
+              <TextField
+                label="Address"
+                value={address}
+                onChangeText={setAddress}
+                placeholder="Shivajinagar, Bangalore"
+                hint="You can refine the map behavior later; the UI stores address and coordinates locally."
+              />
+              <View style={styles.locationHint}>
+                <MapPin color={colors.primaryDark} size={16} />
+                <Text style={styles.locationHintText}>Coordinates control map placement and directions.</Text>
+              </View>
+              <View style={styles.inline}>
+                <TextField label="Latitude" value={lat} onChangeText={setLat} keyboardType="decimal-pad" style={styles.field} />
+                <TextField label="Longitude" value={lng} onChangeText={setLng} keyboardType="decimal-pad" style={styles.field} />
+              </View>
               <View style={styles.chips}>
-                {(["available", "limited", "none"] as const).map((value) => (
-                  <Chip
-                    key={value}
-                    label={value}
-                    active={facilities.carParking === value}
-                    onPress={() => setFacilities((current) => ({ ...current, carParking: value }))}
-                  />
+                {(["mosque", "musallah", "eidgah"] as PlaceType[]).map((value) => (
+                  <Chip key={value} label={value} active={type === value} onPress={() => setType(value)} />
                 ))}
               </View>
             </View>
           </AppCard>
-        ) : null}
 
-        <View style={styles.actions}>
-          <AppButton label={isEditing ? "Save changes" : "Create mosque"} onPress={() => void handleSave()} loading={saving} />
-          <AppButton label="Cancel" onPress={() => router.back()} variant="outline" />
+          <AppCard variant="outlined">
+            <SectionHeader title="Masjid prayer time" />
+            <View style={styles.group}>
+              <View style={styles.chips}>
+                {scheduleTabs.map((tab) => (
+                  <Chip key={tab} label={tab} active={scheduleTab === tab} onPress={() => setScheduleTab(tab)} />
+                ))}
+              </View>
+
+              {scheduleTab === "Prayer"
+                ? prayerLabels.map((prayer) => (
+                    <TextField
+                      key={`athan-${prayer.key}`}
+                      label={`${prayer.label} prayer`}
+                      value={athanTimes[prayer.key]}
+                      onChangeText={(value) => setAthanTimes((current) => ({ ...current, [prayer.key]: value }))}
+                      placeholder="5:15 AM"
+                    />
+                  ))
+                : null}
+
+              {scheduleTab === "Iqama"
+                ? prayerLabels.map((prayer) => (
+                    <TextField
+                      key={`iqamah-${prayer.key}`}
+                      label={`${prayer.label} iqama`}
+                      value={iqamahTimes[prayer.key]}
+                      onChangeText={(value) => setIqamahTimes((current) => ({ ...current, [prayer.key]: value }))}
+                      placeholder="5:30 AM"
+                    />
+                  ))
+                : null}
+
+              {scheduleTab === "Juma / Eid" ? (
+                <>
+                  <TextField
+                    label="Jummah times"
+                    hint="Use comma-separated values such as 1:00 PM, 2:00 PM"
+                    value={jummahCsv}
+                    onChangeText={setJummahCsv}
+                    placeholder="1:00 PM, 2:00 PM"
+                  />
+                  <TextField
+                    label="Eid times"
+                    hint="Use comma-separated values such as 7:30 AM, 9:00 AM"
+                    value={eidCsv}
+                    onChangeText={setEidCsv}
+                    placeholder="7:30 AM, 9:00 AM"
+                  />
+                </>
+              ) : null}
+            </View>
+          </AppCard>
+
+          <AppCard variant="glass">
+            <SectionHeader title="Services" />
+            <View style={styles.group}>
+              {featureLabels.map((feature) => (
+                <View key={feature.key} style={styles.switchRow}>
+                  <Text style={styles.switchLabel}>{feature.label}</Text>
+                  <Switch value={features[feature.key]} onValueChange={(value) => toggleFeature(feature.key, value)} trackColor={{ true: colors.primary }} />
+                </View>
+              ))}
+            </View>
+          </AppCard>
+
+          {type === "mosque" ? (
+            <AppCard variant="outlined">
+              <SectionHeader title="Facilities" />
+              <View style={styles.group}>
+                {facilityLabels.map((facility) => (
+                  <View key={facility.key} style={styles.switchRow}>
+                    <Text style={styles.switchLabel}>{facility.label}</Text>
+                    <Switch
+                      value={Boolean(facilities[facility.key])}
+                      onValueChange={(value) => toggleFacility(facility.key, value)}
+                      trackColor={{ true: colors.primary }}
+                    />
+                  </View>
+                ))}
+                <Text style={styles.parkingLabel}>Car parking</Text>
+                <View style={styles.chips}>
+                  {(["available", "limited", "none"] as const).map((value) => (
+                    <Chip
+                      key={value}
+                      label={value}
+                      active={facilities.carParking === value}
+                      onPress={() => setFacilities((current) => ({ ...current, carParking: value }))}
+                    />
+                  ))}
+                </View>
+              </View>
+            </AppCard>
+          ) : null}
+
+          <View style={styles.actions}>
+            <AppButton label={isEditing ? "Save changes" : "Create mosque"} onPress={() => void handleSave()} loading={saving} />
+            <AppButton label="Cancel" onPress={() => void handleCancel()} variant="outline" />
+          </View>
         </View>
       </ScrollView>
     </AppScreen>
@@ -281,8 +366,64 @@ export function AdminMosqueFormScreen({ mosqueId }: { mosqueId?: string }) {
 
 const styles = StyleSheet.create({
   content: {
+    paddingBottom: spacing.xxl + 96,
+  },
+  heroTop: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  backButton: {
+    width: 42,
+    height: 42,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(10, 35, 49, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heroBottom: {
+    gap: spacing.sm,
+  },
+  heroLabel: {
+    fontFamily: fonts.medium,
+    fontSize: 12,
+    color: "rgba(255,255,255,0.78)",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
+  photoActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  photoButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(12, 47, 61, 0.28)",
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+  },
+  photoGhostButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(12, 47, 61, 0.16)",
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+  },
+  photoButtonText: {
+    fontFamily: fonts.semiBold,
+    fontSize: 13,
+    color: colors.white,
+  },
+  body: {
     gap: spacing.md,
-    paddingBottom: spacing.xxl,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
   },
   group: {
     gap: spacing.sm,
@@ -304,19 +445,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: spacing.md,
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceMuted,
+    borderRadius: radii.lg,
+    backgroundColor: "rgba(255,255,255,0.8)",
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
   },
   switchLabel: {
     flex: 1,
+    ...typography.bodyStrong,
     fontSize: 14,
-    fontWeight: "600",
-    color: colors.text,
+  },
+  parkingLabel: {
+    fontFamily: fonts.semiBold,
+    fontSize: 13,
+    color: colors.primaryDark,
+  },
+  locationHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
+  },
+  locationHintText: {
+    flex: 1,
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    color: colors.textMuted,
   },
   actions: {
     gap: spacing.sm,
-    marginTop: spacing.sm,
+    marginTop: spacing.xs,
   },
 });

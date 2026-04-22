@@ -11,7 +11,7 @@ import { LoadingState } from "@/components/LoadingState";
 import { TextField } from "@/components/TextField";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useMosqueData } from "@/contexts/MosqueDataContext";
-import { colors, radii, spacing } from "@/lib/theme";
+import { colors, fonts, spacing, typography } from "@/lib/theme";
 
 export default function MosqueAdminLoginScreen() {
   const router = useRouter();
@@ -56,18 +56,18 @@ export default function MosqueAdminLoginScreen() {
 
   return (
     <AppScreen contentContainerStyle={styles.content}>
-      <AppHeader title="Mosque admin login" subtitle="Manage one mosque from your device." showBack />
-      <AppCard style={styles.hero}>
-        <Lock color={colors.primary} size={30} />
+      <AppHeader title="Mosque admin login" subtitle="Manage one mosque from your device" showBack />
+      <AppCard variant="glass" style={styles.hero}>
+        <Lock color={colors.primaryDark} size={30} />
         <Text style={styles.heroTitle}>Select your mosque</Text>
-        <Text style={styles.heroText}>This login is still local-demo based in the Expo app.</Text>
+        <Text style={styles.heroText}>This login is still local-demo based in the Expo app, but the management tools now match the main Bilal design system.</Text>
       </AppCard>
       <View style={styles.list}>
         {mosques
           .filter((mosque) => mosque.type === "mosque")
           .map((mosque) => (
             <Pressable key={mosque.id} onPress={() => setSelectedMosqueId(mosque.id)}>
-              <AppCard style={[styles.selectCard, selectedMosqueId === mosque.id && styles.selectCardActive]}>
+              <AppCard variant={selectedMosqueId === mosque.id ? "glass" : "outlined"} style={styles.selectCard}>
                 <Text style={styles.selectTitle}>{mosque.name}</Text>
                 <Text style={styles.selectText}>{mosque.address}</Text>
               </AppCard>
@@ -97,39 +97,31 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   heroTitle: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: colors.text,
+    ...typography.title2,
+    textAlign: "center",
   },
   heroText: {
-    fontSize: 14,
+    ...typography.body,
     textAlign: "center",
-    color: colors.textMuted,
   },
   list: {
     gap: spacing.sm,
   },
   selectCard: {
-    borderColor: colors.border,
-  },
-  selectCardActive: {
-    borderColor: colors.primary,
-    backgroundColor: "#F1FBFB",
+    gap: 4,
   },
   selectTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.text,
+    ...typography.title3,
   },
   selectText: {
-    marginTop: 4,
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.textMuted,
   },
   helper: {
     textAlign: "center",
     color: colors.warning,
+    fontFamily: fonts.semiBold,
     fontSize: 13,
-    fontWeight: "700",
   },
 });
